@@ -6628,12 +6628,23 @@ SELECT ID, [№_кабеля], Откуда, Откуда_кабинет_шка�
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT ID, [№_кабеля], Откуда, Откуда_кабинет_шкаф, Куда, Куда_кабинет_шкаф, ID_Т" +
                 "ип_кабеля, Длина_кабеля, Примечание FROM dbo.main";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[1].Connection = this.Connection;
+            this._commandCollection[1].CommandText = @"SELECT        ID, [№_кабеля], Откуда, Откуда_кабинет_шкаф, Куда, Куда_кабинет_шкаф, ID_Тип_кабеля, Длина_кабеля, Примечание
+FROM            main
+WHERE        (Откуда = @YourID) OR
+                         (Куда = @YourID) OR
+                         (@YourID = 0) AND (Откуда_кабинет_шкаф = @YourRoom) OR
+                         (@YourID = 0) AND (Куда_кабинет_шкаф = @YourRoom)";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@YourID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Откуда", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@YourRoom", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "Откуда_кабинет_шкаф", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -6655,6 +6666,44 @@ SELECT ID, [№_кабеля], Откуда, Откуда_кабинет_шка�
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual DataSet1.mainDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            DataSet1.mainDataTable dataTable = new DataSet1.mainDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillBy(DataSet1.mainDataTable dataTable, global::System.Nullable<int> YourID, int YourRoom) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((YourID.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(YourID.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(YourRoom));
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual DataSet1.mainDataTable GetDataByPortID(global::System.Nullable<int> YourID, int YourRoom) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            if ((YourID.HasValue == true)) {
+                this.Adapter.SelectCommand.Parameters[0].Value = ((int)(YourID.Value));
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[0].Value = global::System.DBNull.Value;
+            }
+            this.Adapter.SelectCommand.Parameters[1].Value = ((int)(YourRoom));
             DataSet1.mainDataTable dataTable = new DataSet1.mainDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;

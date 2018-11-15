@@ -80,17 +80,18 @@ namespace Кабельный_журнал
             TabPage tabPageEdit = new TabPage("Изменить");
             tabControl1.TabPages.Add(tabPageEdit);
             Equipment equipmentEdit1;
+            EList eList = new EList();
             if (equipmentOriginal.portids == null)
             {
-                equipmentEdit1 = new Equipment(0, equipmentOriginal.roomid);
+                equipmentEdit1 = new Equipment(eList, 0, equipmentOriginal.roomid);
             }
             else
             {
-                equipmentEdit1 = new Equipment(equipmentOriginal.portids.First(
+                equipmentEdit1 = new Equipment(eList, equipmentOriginal.portids.First(
                     pair => pair.Value == (equipmentOriginal.Equipment_Ports.Text == null ? "" : equipmentOriginal.Equipment_Ports.Text)
                     ).Key, equipmentOriginal.roomid);
             }
-            EList eList = new EList();
+            
             eList.Ad(tabPageEdit, equipmentEdit1);
         }
 
@@ -144,9 +145,19 @@ namespace Кабельный_журнал
             DataSet1TableAdapters.EquipmentTableAdapter equipmentTableAdapter = new DataSet1TableAdapters.EquipmentTableAdapter();
             var equipmentTable = equipmentTableAdapter.GetData();
             var equipmentRow = equipmentTable.FindByID(Convert.ToInt32(((DataGridView)sender).SelectedRows[0].Cells[7].Value.ToString()));
-            Equipment equipmentCurrent = new Equipment(portRow.ID,equipmentRow.ID_Шкафа_комнаты);
+            Equipment equipmentCurrent = new Equipment(eList, portRow.ID,equipmentRow.ID_Шкафа_комнаты);
             eList.Clear();
             eList.Ad(tabPage1, equipmentCurrent);
+        }
+
+        private void Equipment_Ports_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Equipment_Ports_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

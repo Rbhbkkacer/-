@@ -10,6 +10,7 @@ namespace Кабельный_журнал
 {
     public class Equipment : GroupBox
     {
+        public EList myeList;
         private Label label1;
         private Label label2;
         private Label label3;
@@ -26,8 +27,9 @@ namespace Кабельный_журнал
         public Dictionary<int, string> portids = new Dictionary<int, string>();
         public int roomid;
 
-        public Equipment(int PORT_id = 0,int ROOM_id = 0)
+        public Equipment(EList myList, int PORT_id = 0,int ROOM_id = 0)
         {
+            myeList = myList;
             InitializeComponent();
             if (ROOM_id>0)
             {
@@ -108,6 +110,7 @@ namespace Кабельный_журнал
             Equipment_Ports.Name = "Equipment_Ports";
             Equipment_Ports.Size = new Size(195, 212);
             Equipment_Ports.TabIndex = 1;
+            Equipment_Ports.MouseDoubleClick += Equipment_Ports_MouseDoubleClick;
             // 
             // label6
             // 
@@ -206,7 +209,71 @@ namespace Кабельный_журнал
             Equipment_Name.Name = "Equipment_Name";
             Equipment_Name.Size = new Size(132, 20);
             Equipment_Name.TabIndex = 0;
-            
+        }
+
+        private void Equipment_Ports_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            var ID = portids.First(q => q.Value == ((ListBox)sender).SelectedItem.ToString()).Key;
+            DataSet1TableAdapters.PortTableAdapter portTableAdapter = new DataSet1TableAdapters.PortTableAdapter();
+            var portRow = portTableAdapter.GetDataByID(ID).FindByID(ID);
+            DataSet1TableAdapters.EquipmentTableAdapter equipmentTableAdapter = new DataSet1TableAdapters.EquipmentTableAdapter();
+            var equipmentTable = equipmentTableAdapter.GetData();
+            var equipmentRow = equipmentTable.FindByID(portRow.ID_Оборудования);
+            DataSet1TableAdapters.mainTableAdapter mainTableAdapter = new DataSet1TableAdapters.mainTableAdapter();
+            var mainTable = mainTableAdapter.GetDataByPortID(ID, equipmentRow.ID_Шкафа_комнаты);
+            DataSet1.mainRow root = null;
+            try
+            {
+                root = mainTable.First(q => q.Куда == ID);
+            }
+            catch (Exception)
+            {
+            }
+            if (!(root is null))
+            {
+                EList neList = new EList();
+                //neList.Ad(this.Parent, root.Откуда, root.Откуда_кабинет_шкаф);
+                //neList.Ad(this.Parent, this);
+                int i = myeList.FindIndex(q => q == this);
+                try
+                {
+                    myeList.Re(i - 1);
+                }
+                catch (Exception)
+                {
+                }
+                Equipment newequipment = new Equipment(myeList, root.Откуда, root.Откуда_кабинет_шкаф) {
+                    Parent = this.Parent,
+                    Visible = true,
+                    ContextMenuStrip = Form1.contextMenuStrip1 };
+                newequipment.Equipment_Ports.SelectedItem = newequipment.portids[root.Откуда];
+                myeList.Insert(i, newequipment);
+                myeList.Update_Position();
+            }
+            else
+            {
+                try
+                {
+                    root = mainTable.First(q => q.Откуда == ID);
+                }
+                catch (Exception)
+                {
+                }
+                while (myeList.Count > myeList.FindIndex(q => q == this) + 1)
+                {
+                    myeList.Re(myeList.FindIndex(q => q == this) + 1);
+                }
+                Equipment newequipment = new Equipment(myeList, root.Куда, root.Куда_кабинет_шкаф)
+                {
+                    Parent = this.Parent,
+                    Visible = true,
+                    ContextMenuStrip = Form1.contextMenuStrip1
+                };
+                newequipment.Equipment_Ports.SelectedItem = newequipment.portids[root.Куда];
+                myeList.Ad(this.Parent, newequipment);
+                
+                
+            }
         }
     }
 
@@ -217,7 +284,7 @@ namespace Кабельный_журнал
 
         }
 
-        private void Update_Position()
+        public void Update_Position()
         {
             for (int i = 0; i < Count; i++)
             {
@@ -227,7 +294,7 @@ namespace Кабельный_журнал
 
         public void Ad(Control parent, int PORT = 0, int ROOM = 0)
         {
-            Equipment e = new Equipment(PORT, ROOM) { Parent = parent, Visible = true, ContextMenuStrip = Form1.contextMenuStrip1 };
+            Equipment e = new Equipment(this, PORT, ROOM) { Parent = parent, Visible = true, ContextMenuStrip = Form1.contextMenuStrip1 };
             Add(e);
             int i = FindIndex((Equipment p) => { return p == e; });
             this[i].Location = new Point(3 + 213 * i, 3);
