@@ -16,17 +16,48 @@ namespace Кабельный_журнал
         private Label label4;
         private Label label5;
         private Label label6;
-        private TextBox Equipment_Name;
-        private TextBox Equipment_IP;
-        private TextBox Equipment_MAC;
-        private TextBox House;
-        private TextBox Room;
-        private TextBox Equipment_EO;
-        private ListBox Equipment_Ports;
+        public TextBox Equipment_Name;
+        public TextBox Equipment_IP;
+        public TextBox Equipment_MAC;
+        public TextBox House;
+        public TextBox Room;
+        public TextBox Equipment_EO;
+        public ListBox Equipment_Ports;
+        public Dictionary<int, string> portids = new Dictionary<int, string>();
+        public int roomid;
 
-        public Equipment(int PORT = 0,int ROOM = 0)
+        public Equipment(int PORT_id = 0,int ROOM_id = 0)
         {
             InitializeComponent();
+            if (ROOM_id>0)
+            {
+                DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter dataTableEquipmentAdapter = new DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter();
+                DataSet1TableAdapters.RoomTableAdapter roomTableAdapter = new DataSet1TableAdapters.RoomTableAdapter();
+                DataSet1.RoomDataTable roomTable = roomTableAdapter.GetData();
+                var roomRow = roomTable.FindByID(ROOM_id);
+                Room.Text = roomRow.Шкаф_кабинет;
+                roomid = roomRow.ID;
+                DataSet1TableAdapters.HomeTableAdapter homeTableAdapter = new DataSet1TableAdapters.HomeTableAdapter();
+                DataSet1.HomeDataTable homeTable = homeTableAdapter.GetData();
+                var homeRow = homeTable.FindByID(roomRow.ID_Корпуса);
+                House.Text = homeRow.___корпуса;
+            }
+
+            if (PORT_id>0)
+            {
+                DataSet1TableAdapters.PortTableAdapter portTableAdapter = new DataSet1TableAdapters.PortTableAdapter();
+                var portTable = portTableAdapter.GetDataByID(PORT_id);
+                var portRow = portTable.FindByID(PORT_id);
+                var EquipmentID = portRow.ID_Оборудования;
+                var portCollection = portTableAdapter.GetDataByequipment(EquipmentID).Rows;
+                foreach (DataSet1.PortRow item in portCollection)
+                {
+                    portids.Add(item.ID, item.Порт);
+                    
+                }
+                Equipment_Ports.Items.AddRange(portids.Values.ToArray());
+                Equipment_Ports.Sorted = true;
+            }
         }
 
         private void InitializeComponent()
@@ -194,11 +225,21 @@ namespace Кабельный_журнал
             }
         }
 
-        public void Ad(Control parent)
+        public void Ad(Control parent, int PORT = 0, int ROOM = 0)
         {
-            Equipment e = new Equipment() { Parent = parent, Visible = true, ContextMenuStrip = Form1.contextMenuStrip1 };
+            Equipment e = new Equipment(PORT, ROOM) { Parent = parent, Visible = true, ContextMenuStrip = Form1.contextMenuStrip1 };
             Add(e);
             int i = FindIndex((Equipment p) => { return p == e; });
+            this[i].Location = new Point(3 + 213 * i, 3);
+        }
+
+        public void Ad(Control parent, Equipment equipment)
+        {
+            equipment.Parent = parent;
+            equipment.Visible = true;
+            equipment.ContextMenuStrip = Form1.contextMenuStrip1;
+            Add(equipment);
+            int i = FindIndex((Equipment p) => { return p == equipment; });
             this[i].Location = new Point(3 + 213 * i, 3);
         }
 

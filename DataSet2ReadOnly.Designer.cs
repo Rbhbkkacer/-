@@ -293,6 +293,8 @@ namespace Кабельный_журнал {
             
             private global::System.Data.DataColumn columnПримечание;
             
+            private global::System.Data.DataColumn columnID;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public DataTableEquipmentDataTable() {
@@ -384,6 +386,14 @@ namespace Кабельный_журнал {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public global::System.Data.DataColumn IDColumn {
+                get {
+                    return this.columnID;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -428,10 +438,18 @@ namespace Кабельный_журнал {
                         Оборудование,
                         Mac,
                         IP,
-                        Примечание};
+                        Примечание,
+                        null};
                 rowDataTableEquipmentRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowDataTableEquipmentRow);
                 return rowDataTableEquipmentRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public DataTableEquipmentRow FindByID(int ID) {
+                return ((DataTableEquipmentRow)(this.Rows.Find(new object[] {
+                            ID})));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -458,6 +476,7 @@ namespace Кабельный_журнал {
                 this.columnMac = base.Columns["Mac"];
                 this.columnIP = base.Columns["IP"];
                 this.columnПримечание = base.Columns["Примечание"];
+                this.columnID = base.Columns["ID"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -479,12 +498,22 @@ namespace Кабельный_журнал {
                 base.Columns.Add(this.columnIP);
                 this.columnПримечание = new global::System.Data.DataColumn("Примечание", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnПримечание);
+                this.columnID = new global::System.Data.DataColumn("ID", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnID);
+                this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
+                                this.columnID}, true));
                 this._column__корпуса.MaxLength = 255;
                 this.columnШкаф_кабинет.MaxLength = 255;
                 this.columnОборудование.MaxLength = 255;
                 this.columnMac.MaxLength = 255;
                 this.columnIP.MaxLength = 255;
                 this.columnПримечание.MaxLength = 255;
+                this.columnID.AutoIncrement = true;
+                this.columnID.AutoIncrementSeed = -1;
+                this.columnID.AutoIncrementStep = -1;
+                this.columnID.AllowDBNull = false;
+                this.columnID.ReadOnly = true;
+                this.columnID.Unique = true;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -739,6 +768,17 @@ namespace Кабельный_журнал {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+            public int ID {
+                get {
+                    return ((int)(this[this.tableDataTableEquipment.IDColumn]));
+                }
+                set {
+                    this[this.tableDataTableEquipment.IDColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
             public bool Is___корпусаNull() {
                 return this.IsNull(this.tableDataTableEquipment.___корпусаColumn);
             }
@@ -988,6 +1028,7 @@ namespace Кабельный_журнал.DataSet2ReadOnlyTableAdapters {
             tableMapping.ColumnMappings.Add("Mac", "Mac");
             tableMapping.ColumnMappings.Add("IP", "IP");
             tableMapping.ColumnMappings.Add("Примечание", "Примечание");
+            tableMapping.ColumnMappings.Add("ID", "ID");
             this._adapter.TableMappings.Add(tableMapping);
         }
         
@@ -1004,20 +1045,32 @@ namespace Кабельный_журнал.DataSet2ReadOnlyTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = @"SELECT        Home.[№_корпуса], Room.Шкаф_кабинет, Equipment.EO, Equipment.Оборудование, Equipment.Mac, Equipment.IP, Equipment.Примечание
-FROM            Equipment LEFT OUTER JOIN
-                         Room ON Equipment.ID_Шкафа_комнаты = Room.ID LEFT OUTER JOIN
-                         Home ON Room.ID_Корпуса = Home.ID
-WHERE        (Equipment.ID = Equipment.ID) AND (@Home = Home.[№_корпуса]) AND (@Room IS NULL) AND (@EO IS NULL) AND (@MAC IS NULL) OR
-                         (Equipment.ID = Equipment.ID) AND (@Home = Home.[№_корпуса]) AND (@Room = Room.Шкаф_кабинет) AND (@EO IS NULL) AND (@MAC IS NULL) OR
-                         (Equipment.ID = Equipment.ID) AND (@Home IS NULL) AND (@Room = Room.Шкаф_кабинет) AND (@EO IS NULL) AND (@MAC IS NULL) OR
-                         (Equipment.ID = Equipment.ID) AND (@EO = Equipment.EO) OR
-                         (Equipment.ID = Equipment.ID) AND (@Equipment = Equipment.Оборудование) OR
-                         (Equipment.ID = Equipment.ID) AND (@MAC = Equipment.Mac)";
+            this._commandCollection[0].CommandText = "SELECT        Equipment.ID, Home.[№_корпуса], Room.Шкаф_кабинет, Equipment.EO, Eq" +
+                "uipment.Оборудование, Equipment.Mac, Equipment.IP, Equipment.Примечание\r\nFROM   " +
+                "         Equipment LEFT OUTER JOIN\r\n                         Room ON Equipment.I" +
+                "D_Шкафа_комнаты = Room.ID LEFT OUTER JOIN\r\n                         Home ON Room" +
+                ".ID_Корпуса = Home.ID\r\nWHERE        (Equipment.ID = Equipment.ID) AND (@Home = H" +
+                "ome.[№_корпуса]) AND (@Room = \'\') AND (@EO = 0) AND (@MAC = \'\') AND (@Equipment " +
+                "= \'\') OR\r\n                         (Equipment.ID = Equipment.ID) AND (@Home = Ho" +
+                "me.[№_корпуса]) AND (@Room = Room.Шкаф_кабинет) AND (@EO = 0) AND (@MAC = \'\') AN" +
+                "D \r\n                         (@Equipment = \'\') OR\r\n                         (Equ" +
+                "ipment.ID = Equipment.ID) AND (@Home = \'\') AND (@Room = Room.Шкаф_кабинет) AND (" +
+                "@EO = 0) AND (@MAC = \'\') AND (@Equipment = \'\') OR\r\n                         (Equ" +
+                "ipment.ID = Equipment.ID) AND (@Home = Home.[№_корпуса]) AND (@Room = \'\') AND (@" +
+                "EO = 0) AND (@MAC = \'\') AND \r\n                         (@Equipment = Equipment.О" +
+                "борудование) OR\r\n                         (Equipment.ID = Equipment.ID) AND (@Ho" +
+                "me = Home.[№_корпуса]) AND (@Room = Room.Шкаф_кабинет) AND (@EO = 0) AND (@MAC =" +
+                " \'\') AND \r\n                         (@Equipment = Equipment.Оборудование) OR\r\n  " +
+                "                       (Equipment.ID = Equipment.ID) AND (@Home = \'\') AND (@Room" +
+                " = Room.Шкаф_кабинет) AND (@EO = 0) AND (@MAC = \'\') AND \r\n                      " +
+                "   (@Equipment = Equipment.Оборудование) OR\r\n                         (Equipment" +
+                ".ID = Equipment.ID) AND (@EO = Equipment.EO) AND (@EO > 0) OR\r\n                 " +
+                "        (Equipment.ID = Equipment.ID) AND (@MAC = Equipment.Mac) AND (@MAC <> \'\'" +
+                ")";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Home", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Room", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@EO", global::System.Data.SqlDbType.Int, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@EO", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@MAC", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Equipment", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
@@ -1026,7 +1079,7 @@ WHERE        (Equipment.ID = Equipment.ID) AND (@Home = Home.[№_корпуса
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(DataSet2ReadOnly.DataTableEquipmentDataTable dataTable, string Home, string Room, int EO, string MAC, string Equipment) {
+        public virtual int Fill(DataSet2ReadOnly.DataTableEquipmentDataTable dataTable, string Home, string Room, string EO, string MAC, string Equipment) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((Home == null)) {
                 throw new global::System.ArgumentNullException("Home");
@@ -1040,7 +1093,12 @@ WHERE        (Equipment.ID = Equipment.ID) AND (@Home = Home.[№_корпуса
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(Room));
             }
-            this.Adapter.SelectCommand.Parameters[2].Value = ((int)(EO));
+            if ((EO == null)) {
+                throw new global::System.ArgumentNullException("EO");
+            }
+            else {
+                this.Adapter.SelectCommand.Parameters[2].Value = ((string)(EO));
+            }
             if ((MAC == null)) {
                 throw new global::System.ArgumentNullException("MAC");
             }
@@ -1078,7 +1136,7 @@ WHERE        (Equipment.ID = Equipment.ID) AND (@Home = Home.[№_корпуса
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(Room));
             }
-            this.Adapter.SelectCommand.Parameters[2].Value = ((int)(EO));
+                this.Adapter.SelectCommand.Parameters[2].Value = ((int)(EO));
             if ((MAC == null)) {
                 throw new global::System.ArgumentNullException("MAC");
             }
