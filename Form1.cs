@@ -81,18 +81,20 @@ namespace Кабельный_журнал
             tabControl1.TabPages.Add(tabPageEdit);
             Equipment equipmentEdit1;
             EList eList = new EList();
+
             if (equipmentOriginal.portids == null)
             {
-                equipmentEdit1 = new Equipment(eList, 0, equipmentOriginal.roomid);
+                equipmentEdit1 = new Equipment(eList, eList.Count, 0, equipmentOriginal.roomid, equipmentOriginal.equipmentid);
             }
             else
             {
-                equipmentEdit1 = new Equipment(eList, equipmentOriginal.portids.First(
+                equipmentEdit1 = new Equipment(eList, eList.Count, equipmentOriginal.portids.First(
                     pair => pair.Value == (equipmentOriginal.Equipment_Ports.Text == null ? "" : equipmentOriginal.Equipment_Ports.Text)
-                    ).Key, equipmentOriginal.roomid);
+                    ).Key, equipmentOriginal.roomid,equipmentOriginal.equipmentid);
             }
             
             eList.Ad(tabPageEdit, equipmentEdit1);
+            tabPageEdit.Select();
         }
 
         private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
@@ -143,11 +145,15 @@ namespace Кабельный_журнал
             var portTable = portTableAdapter.GetData();
             var portRow = portTable.First(q => q.ID_Оборудования == Convert.ToInt32(((DataGridView)sender).SelectedRows[0].Cells[7].Value.ToString()));
             DataSet1TableAdapters.EquipmentTableAdapter equipmentTableAdapter = new DataSet1TableAdapters.EquipmentTableAdapter();
-            var equipmentTable = equipmentTableAdapter.GetData();
-            var equipmentRow = equipmentTable.FindByID(Convert.ToInt32(((DataGridView)sender).SelectedRows[0].Cells[7].Value.ToString()));
-            Equipment equipmentCurrent = new Equipment(eList, portRow.ID,equipmentRow.ID_Шкафа_комнаты);
-            eList.Clear();
-            eList.Ad(tabPage1, equipmentCurrent);
+            var equipmentRow = equipmentTableAdapter.GetDataByID(Convert.ToInt32(((DataGridView)sender).SelectedRows[0].Cells[7].Value.ToString()))[0];
+            eList.ReAll();
+            Equipment equipmentCurrent = new Equipment(eList, eList.Count, 0,equipmentRow.ID_Шкафа_комнаты,portRow.ID_Оборудования);
+            equipmentCurrent.Parent = tabPage1;
+            equipmentCurrent.parent = tabPage1;
+            //eList.Ad(tabPage1, equipmentCurrent);
+            //eList[eList.FindIndex(q => q == equipmentCurrent)].myeList = eList;
+            tabControl1.SelectedTab = tabPage1;
+
         }
 
         private void Equipment_Ports_SelectedIndexChanged(object sender, EventArgs e)

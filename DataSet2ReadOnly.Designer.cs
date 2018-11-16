@@ -1136,7 +1136,9 @@ namespace Кабельный_журнал.DataSet2ReadOnlyTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(Room));
             }
+            
                 this.Adapter.SelectCommand.Parameters[2].Value = ((int)(EO));
+            
             if ((MAC == null)) {
                 throw new global::System.ArgumentNullException("MAC");
             }

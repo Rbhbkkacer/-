@@ -5241,7 +5241,7 @@ namespace Кабельный_журнал {
                         return ((int)(this[this.tableEquipment.EOColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Значение для столбца \'EO\' в таблице \'Equipment\' равно DBNull.", e);
+                        return 0;
                     }
                 }
                 set {
@@ -5257,7 +5257,7 @@ namespace Кабельный_журнал {
                         return ((string)(this[this.tableEquipment.ОборудованиеColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Значение для столбца \'Оборудование\' в таблице \'Equipment\' равно DBNull.", e);
+                        return "";
                     }
                 }
                 set {
@@ -5273,7 +5273,7 @@ namespace Кабельный_журнал {
                         return ((string)(this[this.tableEquipment.MacColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Значение для столбца \'Mac\' в таблице \'Equipment\' равно DBNull.", e);
+                        return "";
                     }
                 }
                 set {
@@ -5289,7 +5289,7 @@ namespace Кабельный_журнал {
                         return ((string)(this[this.tableEquipment.IPColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Значение для столбца \'IP\' в таблице \'Equipment\' равно DBNull.", e);
+                        return "";
                     }
                 }
                 set {
@@ -5305,7 +5305,7 @@ namespace Кабельный_журнал {
                         return ((string)(this[this.tableEquipment.ПримечаниеColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("Значение для столбца \'Примечание\' в таблице \'Equipment\' равно DBNull.", e);
+                        return "";
                     }
                 }
                 set {
@@ -8484,12 +8484,18 @@ SELECT ID, ID_Шкафа_комнаты, EO, Оборудование, Mac, IP, 
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         private void InitCommandCollection() {
-            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
+            this._commandCollection = new global::System.Data.SqlClient.SqlCommand[2];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
             this._commandCollection[0].CommandText = "SELECT ID, ID_Шкафа_комнаты, EO, Оборудование, Mac, IP, Примечание FROM dbo.Equip" +
                 "ment";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1] = new global::System.Data.SqlClient.SqlCommand();
+            this._commandCollection[1].Connection = this.Connection;
+            this._commandCollection[1].CommandText = "SELECT        ID, ID_Шкафа_комнаты, EO, Оборудование, Mac, IP, Примечание\r\nFROM  " +
+                "          Equipment\r\nWHERE        (ID = @ID)";
+            this._commandCollection[1].CommandType = global::System.Data.CommandType.Text;
+            this._commandCollection[1].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@ID", global::System.Data.SqlDbType.Int, 4, global::System.Data.ParameterDirection.Input, 0, 0, "ID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -8511,6 +8517,32 @@ SELECT ID, ID_Шкафа_комнаты, EO, Оборудование, Mac, IP, 
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
         public virtual DataSet1.EquipmentDataTable GetData() {
             this.Adapter.SelectCommand = this.CommandCollection[0];
+            DataSet1.EquipmentDataTable dataTable = new DataSet1.EquipmentDataTable();
+            this.Adapter.Fill(dataTable);
+            return dataTable;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, false)]
+        public virtual int FillBy(DataSet1.EquipmentDataTable dataTable, int ID) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(ID));
+            if ((this.ClearBeforeFill == true)) {
+                dataTable.Clear();
+            }
+            int returnValue = this.Adapter.Fill(dataTable);
+            return returnValue;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
+        [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
+        [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, false)]
+        public virtual DataSet1.EquipmentDataTable GetDataByID(int ID) {
+            this.Adapter.SelectCommand = this.CommandCollection[1];
+            this.Adapter.SelectCommand.Parameters[0].Value = ((int)(ID));
             DataSet1.EquipmentDataTable dataTable = new DataSet1.EquipmentDataTable();
             this.Adapter.Fill(dataTable);
             return dataTable;
