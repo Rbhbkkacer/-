@@ -60,41 +60,54 @@ namespace Кабельный_журнал
 
             if (ROOM_id>0)
             {
-                DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter dataTableEquipmentAdapter = new DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter();
-                DataSet1TableAdapters.RoomTableAdapter roomTableAdapter = new DataSet1TableAdapters.RoomTableAdapter();
-                var roomTable = roomTableAdapter.GetData();
-                var roomRow = roomTable.FindByID(ROOM_id);
-                Room.Text = roomRow.Шкаф_кабинет;
-                roomid = roomRow.ID;
-                DataSet1TableAdapters.HomeTableAdapter homeTableAdapter = new DataSet1TableAdapters.HomeTableAdapter();
-                var homeTable = homeTableAdapter.GetData();
-                var homeRow = homeTable.FindByID(roomRow.ID_Корпуса);
-                House.Text = homeRow.___корпуса;
+                Task.Run(() => {
+                    DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter dataTableEquipmentAdapter = new DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter();
+                    DataSet1TableAdapters.RoomTableAdapter roomTableAdapter = new DataSet1TableAdapters.RoomTableAdapter();
+                    var roomTable = roomTableAdapter.GetData();
+                    var roomRow = roomTable.FindByID(ROOM_id);
+                    roomid = roomRow.ID;
+                    DataSet1TableAdapters.HomeTableAdapter homeTableAdapter = new DataSet1TableAdapters.HomeTableAdapter();
+                    var homeTable = homeTableAdapter.GetData();
+                    var homeRow = homeTable.FindByID(roomRow.ID_Корпуса);
+                    Invoke(new Action(() =>
+                    {
+                        Room.Text = roomRow.Шкаф_кабинет;
+                        House.Text = homeRow.___корпуса;
+                    }));
+                });
             }
 
             if (equipmentID > 0)
             {
-                equipmentid = equipmentID;
-                DataSet1TableAdapters.EquipmentTableAdapter equipmentTableAdapter = new DataSet1TableAdapters.EquipmentTableAdapter();
-                var equipmentRow = equipmentTableAdapter.GetDataByID(equipmentid)[0];
-                Equipment_Name.Text = Text = equipmentRow.Оборудование;
-                Equipment_EO.Text = equipmentRow.EO == 0 ? "" : equipmentRow.EO.ToString();
-                Equipment_MAC.Text = equipmentRow.Mac;
-                Equipment_IP.Text = equipmentRow.IP;
-                DataSet1TableAdapters.PortTableAdapter portTableAdapter = new DataSet1TableAdapters.PortTableAdapter();
-                var portCollection = portTableAdapter.GetDataByequipment(equipmentid).Rows;
-                foreach (DataSet1.PortRow item in portCollection)
-                {
-                    portids.Add(item.ID, item.Порт);
-                    Equipment_Ports.Items.Add(String.Format("{0,-20}", item.Порт) + item.Включен.ToString());
-                    if (PORT_id==item.ID)
+                Task.Run(() => {
+                    equipmentid = equipmentID;
+                    DataSet1TableAdapters.EquipmentTableAdapter equipmentTableAdapter = new DataSet1TableAdapters.EquipmentTableAdapter();
+                    var equipmentRow = equipmentTableAdapter.GetDataByID(equipmentid)[0];
+                    DataSet1TableAdapters.PortTableAdapter portTableAdapter = new DataSet1TableAdapters.PortTableAdapter();
+                    var portCollection = portTableAdapter.GetDataByequipment(equipmentid).Rows;
+                    foreach (DataSet1.PortRow item in portCollection)
                     {
-                        Equipment_Ports.SelectedItem = String.Format("{0,-20}", item.Порт) + item.Включен.ToString();
-                        //myeList.ClickPort(Equipment_Ports);
+                        portids.Add(item.ID, item.Порт);
+                        //Invoke(new Action(() =>
+                        {
+                            Invoke(new Action(() => Equipment_Ports.Items.Add(String.Format("{0,-20}", item.Порт) + item.Включен.ToString())));
+                            if (PORT_id == item.ID)
+                            {
+                                Invoke(new Action(() => Equipment_Ports.SelectedItem = String.Format("{0,-20}", item.Порт) + item.Включен.ToString()));
+                                //myeList.ClickPort(Equipment_Ports);
+                            }
+                        }//));
                     }
-                }
-                //Equipment_Ports.Items.AddRange(portids.Values.ToArray());
-                Equipment_Ports.Sorted = true;
+                    //Equipment_Ports.Items.AddRange(portids.Values.ToArray());
+                    Invoke(new Action(() =>
+                    {
+                        Equipment_Ports.Sorted = true;
+                        Equipment_Name.Text = Text = equipmentRow.Оборудование;
+                        Equipment_EO.Text = equipmentRow.EO == 0 ? "" : equipmentRow.EO.ToString();
+                        Equipment_MAC.Text = equipmentRow.Mac;
+                        Equipment_IP.Text = equipmentRow.IP;
+                    }));
+                });
             }
         }
 
@@ -434,27 +447,13 @@ namespace Кабельный_журнал
             {
                 ReAll();
             }
-            List<Task> tasks = new List<Task>();
             foreach (var item in mainRow.ItemArray)
             {
                 if (item.ToString() != "")
                 {
-                    tasks.Add(Task.Run(() => Func(index: mainRow.ItemArray.ToList().IndexOf(item), PORT: Convert.ToInt32(item.ToString()))));
-                    
+                    Task.Run(() => Ad(index: mainRow.ItemArray.ToList().IndexOf(item), PORT: Convert.ToInt32(item.ToString())));
                 }
             }
-            /*foreach (object item in mainRow.ItemArray)
-            {
-                if (item.ToString() != "")
-                {
-                    Ad(PORT: Convert.ToInt32(item.ToString()));
-                }
-            }*/
-        }
-
-        private void Func(int index, int PORT)
-        {
-            Ad(index: index, PORT: PORT);
         }
 
         public void Update_Position()

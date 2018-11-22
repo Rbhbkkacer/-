@@ -71,7 +71,6 @@ namespace Кабельный_журнал
             this.удалитьToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.удалитьToolStripMenuItem.Text = "Удалить";
             this.удалитьToolStripMenuItem.Click += new System.EventHandler(this.удалитьToolStripMenuItem_Click);
-            groupBox1.ContextMenuStrip = contextMenuStrip1;
         }
 
         private void изменитьToolStripMenuItem_Click(object sender, EventArgs e)

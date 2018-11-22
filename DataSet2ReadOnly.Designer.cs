@@ -1553,18 +1553,18 @@ namespace Кабельный_журнал.DataSet2ReadOnlyTableAdapters {
                 "        (Equipment.ID = Equipment.ID) AND (@MAC = Equipment.Mac) AND (@MAC <> \'\'" +
                 ")";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Home", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Room", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@EO", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@MAC", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Equipment", global::System.Data.SqlDbType.VarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Home", global::System.Data.SqlDbType.NVarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Room", global::System.Data.SqlDbType.NVarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@EO", global::System.Data.SqlDbType.BigInt, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@MAC", global::System.Data.SqlDbType.NVarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._commandCollection[0].Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@Equipment", global::System.Data.SqlDbType.NVarChar, 1024, global::System.Data.ParameterDirection.Input, 0, 0, "", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Fill, true)]
-        public virtual int Fill(DataSet2ReadOnly.DataTableEquipmentDataTable dataTable, string Home, string Room, string EO, string MAC, string Equipment) {
+        public virtual int Fill(DataSet2ReadOnly.DataTableEquipmentDataTable dataTable, string Home, string Room, long EO, string MAC, string Equipment) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((Home == null)) {
                 throw new global::System.ArgumentNullException("Home");
@@ -1578,12 +1578,7 @@ namespace Кабельный_журнал.DataSet2ReadOnlyTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(Room));
             }
-            if ((EO == null)) {
-                throw new global::System.ArgumentNullException("EO");
-            }
-            else {
-                this.Adapter.SelectCommand.Parameters[2].Value = ((string)(EO));
-            }
+            this.Adapter.SelectCommand.Parameters[2].Value = ((long)(EO));
             if ((MAC == null)) {
                 throw new global::System.ArgumentNullException("MAC");
             }
@@ -1607,7 +1602,7 @@ namespace Кабельный_журнал.DataSet2ReadOnlyTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "15.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Select, true)]
-        public virtual DataSet2ReadOnly.DataTableEquipmentDataTable GetData(string Home, string Room, int EO, string MAC, string Equipment) {
+        public virtual DataSet2ReadOnly.DataTableEquipmentDataTable GetData(string Home, string Room, long EO, string MAC, string Equipment) {
             this.Adapter.SelectCommand = this.CommandCollection[0];
             if ((Home == null)) {
                 throw new global::System.ArgumentNullException("Home");
@@ -1621,7 +1616,7 @@ namespace Кабельный_журнал.DataSet2ReadOnlyTableAdapters {
             else {
                 this.Adapter.SelectCommand.Parameters[1].Value = ((string)(Room));
             }
-            this.Adapter.SelectCommand.Parameters[2].Value = ((int)(EO));
+            this.Adapter.SelectCommand.Parameters[2].Value = ((long)(EO));
             if ((MAC == null)) {
                 throw new global::System.ArgumentNullException("MAC");
             }
