@@ -24,12 +24,12 @@ namespace Кабельный_журнал
         private ToolStripMenuItem удалитьToolStripMenuItem;
         DataTable table;
 
-        public EList eList = new EList();
+        public EList eList;
         public Form1()
         {
             InitializeComponent();
             InitializeContextMenuStrip();
-            
+            eList = new EList(tabPage1);
 
 
 
@@ -76,24 +76,27 @@ namespace Кабельный_журнал
 
         private void изменитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Equipment equipmentOriginal = ((ContextMenuStrip)(sender as ToolStripMenuItem).Owner).SourceControl as Equipment;
+            Equipment equipmentOriginal;
+            var s = ((ContextMenuStrip)(sender as ToolStripMenuItem).Owner).SourceControl;
+            equipmentOriginal = s as Equipment;
+
             TabPage tabPageEdit = new TabPage("Изменить");
             tabControl1.TabPages.Add(tabPageEdit);
             Equipment equipmentEdit1;
-            EList eList = new EList();
+            EList eList = new EList(tabPageEdit);
 
             if (equipmentOriginal.portids == null)
             {
-                equipmentEdit1 = new Equipment(eList, eList.Count, 0, equipmentOriginal.roomid, equipmentOriginal.equipmentid);
+                equipmentEdit1 = new Equipment(myList: eList, index:eList.Count, PORT_id: 0, ROOM_id: equipmentOriginal.roomid, equipmentID: equipmentOriginal.equipmentid);
             }
             else
             {
-                equipmentEdit1 = new Equipment(eList, eList.Count, equipmentOriginal.portids.First(
+                equipmentEdit1 = new Equipment(myList: eList, index: eList.Count, PORT_id: equipmentOriginal.portids.First(
                     pair => pair.Value == (equipmentOriginal.Equipment_Ports.Text == null ? "" : equipmentOriginal.Equipment_Ports.Text)
-                    ).Key, equipmentOriginal.roomid,equipmentOriginal.equipmentid);
+                    ).Key, ROOM_id: equipmentOriginal.roomid, equipmentID: equipmentOriginal.equipmentid);
             }
             
-            eList.Ad(tabPageEdit, equipmentEdit1);
+            eList.Ad(eList.Count, equipmentEdit1);
             tabPageEdit.Select();
         }
 
@@ -147,9 +150,9 @@ namespace Кабельный_журнал
             DataSet1TableAdapters.EquipmentTableAdapter equipmentTableAdapter = new DataSet1TableAdapters.EquipmentTableAdapter();
             var equipmentRow = equipmentTableAdapter.GetDataByID(Convert.ToInt32(((DataGridView)sender).SelectedRows[0].Cells[7].Value.ToString()))[0];
             eList.ReAll();
-            Equipment equipmentCurrent = new Equipment(eList, eList.Count, 0,equipmentRow.ID_Шкафа_комнаты,portRow.ID_Оборудования);
+            Equipment equipmentCurrent = new Equipment(myList: eList, index:0, ROOM_id: equipmentRow.ID_Шкафа_комнаты, equipmentID: portRow.ID_Оборудования);
             equipmentCurrent.Parent = tabPage1;
-            equipmentCurrent.parent = tabPage1;
+            eList.Ad(0, equipmentCurrent);
             //eList.Ad(tabPage1, equipmentCurrent);
             //eList[eList.FindIndex(q => q == equipmentCurrent)].myeList = eList;
             tabControl1.SelectedTab = tabPage1;
