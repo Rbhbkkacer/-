@@ -30,7 +30,7 @@ namespace Кабельный_журнал
             InitializeComponent();
             InitializeContextMenuStrip();
             eList = new EList(tabPage1);
-
+            
 
 
 

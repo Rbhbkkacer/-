@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,6 +15,94 @@ namespace Кабельный_журнал
 {
     public class Equipment : GroupBox
     {
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern IntPtr FindWindow(IntPtr ZeroOnly, string lpWindowName);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, SetWindowPosFlags uFlags);
+
+        [Flags()]
+        public enum SetWindowPosFlags : uint
+        {
+            /// <summary>If the calling thread and the thread that owns the window are attached to different input queues,
+            /// the system posts the request to the thread that owns the window. This prevents the calling thread from
+            /// blocking its execution while other threads process the request.</summary>
+            /// <remarks>SWP_ASYNCWINDOWPOS</remarks>
+            AsynchronousWindowPosition = 0x4000,
+            /// <summary>Prevents generation of the WM_SYNCPAINT message.</summary>
+            /// <remarks>SWP_DEFERERASE</remarks>
+            DeferErase = 0x2000,
+            /// <summary>Draws a frame (defined in the window's class description) around the window.</summary>
+            /// <remarks>SWP_DRAWFRAME</remarks>
+            DrawFrame = 0x0020,
+            /// <summary>Applies new frame styles set using the SetWindowLong function. Sends a WM_NCCALCSIZE message to
+            /// the window, even if the window's size is not being changed. If this flag is not specified, WM_NCCALCSIZE
+            /// is sent only when the window's size is being changed.</summary>
+            /// <remarks>SWP_FRAMECHANGED</remarks>
+            FrameChanged = 0x0020,
+            /// <summary>Hides the window.</summary>
+            /// <remarks>SWP_HIDEWINDOW</remarks>
+            HideWindow = 0x0080,
+            /// <summary>Does not activate the window. If this flag is not set, the window is activated and moved to the
+            /// top of either the topmost or non-topmost group (depending on the setting of the hWndInsertAfter
+            /// parameter).</summary>
+            /// <remarks>SWP_NOACTIVATE</remarks>
+            DoNotActivate = 0x0010,
+            /// <summary>Discards the entire contents of the client area. If this flag is not specified, the valid
+            /// contents of the client area are saved and copied back into the client area after the window is sized or
+            /// repositioned.</summary>
+            /// <remarks>SWP_NOCOPYBITS</remarks>
+            DoNotCopyBits = 0x0100,
+            /// <summary>Retains the current position (ignores X and Y parameters).</summary>
+            /// <remarks>SWP_NOMOVE</remarks>
+            IgnoreMove = 0x0002,
+            /// <summary>Does not change the owner window's position in the Z order.</summary>
+            /// <remarks>SWP_NOOWNERZORDER</remarks>
+            DoNotChangeOwnerZOrder = 0x0200,
+            /// <summary>Does not redraw changes. If this flag is set, no repainting of any kind occurs. This applies to
+            /// the client area, the nonclient area (including the title bar and scroll bars), and any part of the parent
+            /// window uncovered as a result of the window being moved. When this flag is set, the application must
+            /// explicitly invalidate or redraw any parts of the window and parent window that need redrawing.</summary>
+            /// <remarks>SWP_NOREDRAW</remarks>
+            DoNotRedraw = 0x0008,
+            /// <summary>Same as the SWP_NOOWNERZORDER flag.</summary>
+            /// <remarks>SWP_NOREPOSITION</remarks>
+            DoNotReposition = 0x0200,
+            /// <summary>Prevents the window from receiving the WM_WINDOWPOSCHANGING message.</summary>
+            /// <remarks>SWP_NOSENDCHANGING</remarks>
+            DoNotSendChangingEvent = 0x0400,
+            /// <summary>Retains the current size (ignores the cx and cy parameters).</summary>
+            /// <remarks>SWP_NOSIZE</remarks>
+            IgnoreResize = 0x0001,
+            /// <summary>Retains the current Z order (ignores the hWndInsertAfter parameter).</summary>
+            /// <remarks>SWP_NOZORDER</remarks>
+            IgnoreZOrder = 0x0004,
+            /// <summary>Displays the window.</summary>
+            /// <remarks>SWP_SHOWWINDOW</remarks>
+            ShowWindow = 0x0040,
+        }
+
+        public struct Interface{
+            string description;
+            /// <summary>
+            /// acces: no mdix auto, no cdp enable, switchport port-security, switchport port-security mac-address sticky, mac
+            /// trunk: switchport nonegotiate, udld port
+            /// </summary>
+            string sw_mode;
+            int native_vlan;
+            int[] vlans;
+            bool sw_po;
+            bool sw_po_mac_st;
+            List<string> mac;
+            bool sh;
+            bool sp_profast;
+            bool sp_bpduguard;
+            string media_type;
+            bool udld_port;
+            string duplex;
+        }
+
         public EList myeList;
         private Label label1;
         private Label label2;
@@ -17,6 +110,7 @@ namespace Кабельный_журнал
         private Label label4;
         private Label label5;
         private Label label6;
+        private LinkLabel linkLabel1;
         public TextBox Equipment_Name;
         public TextBox Equipment_IP;
         public TextBox Equipment_MAC;
@@ -101,6 +195,11 @@ namespace Кабельный_журнал
                     //Equipment_Ports.Items.AddRange(portids.Values.ToArray());
                     Invoke(new Action(() =>
                     {
+                        if (equipmentRow.IP != "")
+                        {
+                            Controls.Add(linkLabel1);
+                            linkLabel1.LinkClicked += LinkLabel1_LinkClicked;
+                        }
                         Equipment_Ports.Sorted = true;
                         Equipment_Name.Text = Text = equipmentRow.Оборудование;
                         Equipment_EO.Text = equipmentRow.EO == 0 ? "" : equipmentRow.EO.ToString();
@@ -111,6 +210,166 @@ namespace Кабельный_журнал
             }
         }
 
+        private void LinkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            e.Link.Name = @"-telnet ipatov@" + ((Equipment)((LinkLabel)sender).Parent).Equipment_IP.Text;
+            List<Interface> interfaces = new List<Interface>();
+            using (Process dude = new Process())
+            {
+                dude.StartInfo = new ProcessStartInfo
+                {
+                    //Arguments = e.Link.Name,
+                    //FileName = Application.StartupPath + @"\plink.exe ",
+                    FileName = "cmd",
+                    WorkingDirectory = Application.StartupPath,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    //WindowStyle = ProcessWindowStyle.Maximized
+                    WindowStyle = ProcessWindowStyle.Maximized,
+                };
+                //dude.OutputDataReceived += Dude_OutputDataReceived;
+                
+                //dude.BeginErrorReadLine();
+                //dude.WaitForExit();
+
+                TabPage tabPageConsole = new TabPage(((Equipment)((LinkLabel)sender).Parent).Equipment_IP.Text);
+                TabControl tabControl = ((TabControl)((TabPage)((Equipment)((LinkLabel)sender).Parent).Parent).Parent);
+                tabControl.TabPages.Add(tabPageConsole);
+                tabControl.SelectedTab = tabPageConsole;
+                dude.Start();
+                
+                //dude.BeginOutputReadLine();
+                //SetParent(((Equipment)((LinkLabel)sender).Parent).Handle, tabPageConsole.Handle);
+                Thread.Sleep(150);
+                //SetWindowPos(dude.MainWindowHandle, IntPtr.Zero, -8, -30, 875, 11438, 0);
+                SetParent(dude.MainWindowHandle, tabPageConsole.Handle);
+                //SetWindowPos(dude.MainWindowHandle, IntPtr.Zero, -8, -30, 875, 11438, 0);
+                StreamReader streamReader = dude.StandardOutput;
+                StreamWriter streamWriter = dude.StandardInput;
+
+                streamWriter.WriteLine(@"klink.exe " + e.Link.Name);
+                streamWriter.WriteLine("ipatov\nRbhbkkBgfnjd");
+                /*Task.Run(() =>
+                {
+                    var s = streamReader.ReadToEnd();
+                });*/
+                
+                
+                //streamWriter.WriteLine("sh int statu");
+                //dude.StandardInput.WriteLineAsync(@"\n\n\nconf t\nex\nsh ru\n");
+                TabControl tabControl1 = new TabControl();
+                tabControl1.Parent = tabPageConsole;
+                tabControl1.Dock = DockStyle.Fill;
+                foreach (var item in ((Equipment)((LinkLabel)sender).Parent).portids.Values)
+                {
+                    TabPage tabPage = new TabPage(item);
+                    tabControl1.TabPages.Add(tabPage);
+                    tabPage.Enter += TabPage_Enter;
+                    streamWriter.WriteLine("sh ru in " + item);
+                    var s = streamReader.ReadLine();
+                    tabPage.Tag = new List<string>();
+                    while (!(s.Contains("Building configuration...")))
+                    {
+                        s = streamReader.ReadLine();
+                    }
+                    streamReader.ReadLine(); streamReader.ReadLine(); streamReader.ReadLine();
+                    s = streamReader.ReadLine();
+                    while (s!="")
+                    {
+                        ((List<string>)tabPage.Tag).Add(s);
+                        s = streamReader.ReadLine();
+                    }
+                    string description;
+                    /// <summary>
+                    /// acces: no mdix auto, no cdp enable, switchport port-security, switchport port-security mac-address sticky, mac
+                    /// trunk: switchport nonegotiate, udld port
+                    /// </summary>
+                    string sw_mode = ((List<string>) tabPage.Tag).Find(q => q.Contains("switchport mode ")).Remove(0, "switchport mode ".Length + 1);
+                    int native_vlan;
+                    int[] vlans;
+                    bool sw_po;
+                    bool sw_po_mac_st;
+                    List<string> mac = new List<string>();
+                    bool sh;
+                    bool sp_profast;
+                    bool sp_bpduguard;
+                    string media_type;
+                    bool udld_port;
+                    string duplex;
+                    try
+                    {
+                        description = ((List<string>)tabPage.Tag).Find(q => q.Contains("description ")).Remove(0, "description ".Length + 1);
+                    }
+                    catch (Exception)
+                    {
+                        description = "";
+                    }
+                    if (sw_mode == "access")
+                    {
+                        try
+                        {
+                            sw_po = ((List<string>)tabPage.Tag).Find(q => q.Trim() == "switchport port-security").Contains("switchport port-security");
+                        }
+                        catch (Exception)
+                        {
+                            sw_po = false;
+                        }
+                        try
+                        {
+                            sw_po_mac_st = ((List<string>)tabPage.Tag).Find(q => q.Trim() == "switchport port-security mac-address sticky").Contains("switchport port-security mac-address sticky");
+                        }
+                        catch (Exception)
+                        {
+                            sw_po_mac_st = false;
+                        }
+                        try
+                        {
+                            mac = ((List<string>)tabPage.Tag).FindAll(q => q.Contains("mac-address"));
+                            for (int i = 0; i < mac.Count; i++)
+                            {
+                                mac[i] = mac[i].Remove(0, mac[i].IndexOf("mac-address") + "mac-address".Length + 1);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            
+                        }
+                        try
+                        {
+                            sh = ((List<string>)tabPage.Tag).Find(q => q.Contains("shutdown")).Contains("shutdown");
+                        }
+                        catch (Exception)
+                        {
+                            sh = false;
+                        }
+
+                    }
+
+                    //streamWriter.WriteLine("sh ru in " + item);
+                }
+
+
+
+            }
+        }
+
+        private void TabPage_Enter(object sender, EventArgs e)
+        {
+
+            
+        }
+
+        private void Dude_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Console.WriteLine(e.Data);
+            if (e.Data== " --More--         ")
+            {
+                //((Process)sender).StandardInput.WriteLine(@"\n");
+            }
+        }
+
         private void InitializeComponent()
         {
             //Invoke(new Action(() =>
@@ -118,6 +377,7 @@ namespace Кабельный_журнал
                 Equipment_Ports = new ListBox();
                 label6 = new Label();
                 Equipment_IP = new TextBox();
+                linkLabel1 = new LinkLabel();
                 label5 = new Label();
                 Equipment_MAC = new TextBox();
                 label4 = new Label();
@@ -176,8 +436,18 @@ namespace Кабельный_журнал
                 // 
                 Equipment_IP.Location = new Point(29, 120);
                 Equipment_IP.Name = "Equipment_IP";
-                Equipment_IP.Size = new Size(172, 20);
+                Equipment_IP.Size = new Size(90, 20);
                 Equipment_IP.TabIndex = 10;
+                // 
+                // linkLabel1
+                // 
+                this.linkLabel1.AutoSize = true;
+                this.linkLabel1.Location = new Point(123, 123);
+                this.linkLabel1.Name = "linkLabel1";
+                this.linkLabel1.Size = new Size(37, 13);
+                this.linkLabel1.TabIndex = 3;
+                this.linkLabel1.TabStop = true;
+                this.linkLabel1.Text = "Telnet";
                 // 
                 // label5
                 // 
@@ -462,9 +732,9 @@ namespace Кабельный_журнал
             {
                 for (int i = 0; i < Count; i++)
                 {
-                        this[i].Location = new Point(3 + 213 * this[i].index, 3);
-                
+                    this[i].Location = new Point(3 + 213 * this[i].index, 3);
                 }
+                this.OrderBy(q => q.index);
             }));
         }
 
