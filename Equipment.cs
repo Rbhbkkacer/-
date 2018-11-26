@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -84,23 +85,22 @@ namespace Кабельный_журнал
         }
 
         public struct Interface{
-            string description;
+            public string description;
             /// <summary>
             /// acces: no mdix auto, no cdp enable, switchport port-security, switchport port-security mac-address sticky, mac
             /// trunk: switchport nonegotiate, udld port
             /// </summary>
-            string sw_mode;
-            int native_vlan;
-            int[] vlans;
-            bool sw_po;
-            bool sw_po_mac_st;
-            List<string> mac;
-            bool sh;
-            bool sp_profast;
-            bool sp_bpduguard;
-            string media_type;
-            bool udld_port;
-            string duplex;
+            public string sw_mode;
+            public int native_vlan;
+            public int[] vlans;
+            public bool sw_po;
+            public bool sw_po_mac_st;
+            public List<string> mac;
+            public bool sh;
+            public bool sp_bpduguard;
+            public string media_type;
+            public bool udld_port;
+            public string duplex;
         }
 
         public EList myeList;
@@ -117,7 +117,7 @@ namespace Кабельный_журнал
         public TextBox House;
         public TextBox Room;
         public TextBox Equipment_EO;
-        public ListBox Equipment_Ports;
+        public ListView Equipment_Ports;
         public Dictionary<int, string> portids = new Dictionary<int, string>();
         public int roomid;
         public int equipmentid;
@@ -179,17 +179,27 @@ namespace Кабельный_журнал
                     var equipmentRow = equipmentTableAdapter.GetDataByID(equipmentid)[0];
                     DataSet1TableAdapters.PortTableAdapter portTableAdapter = new DataSet1TableAdapters.PortTableAdapter();
                     var portCollection = portTableAdapter.GetDataByequipment(equipmentid).Rows;
+                    DataSet2ReadOnlyTableAdapters.portNameTableAdapter portNameTableAdapter = new DataSet2ReadOnlyTableAdapters.portNameTableAdapter();
+                    var portNameTable = portNameTableAdapter.GetData(equipmentid);
                     foreach (DataSet1.PortRow item in portCollection)
                     {
                         portids.Add(item.ID, item.Порт);
                         //Invoke(new Action(() =>
                         {
-                            Invoke(new Action(() => Equipment_Ports.Items.Add(String.Format("{0,-20}", item.Порт) + item.Включен.ToString())));
-                            if (PORT_id == item.ID)
+                            Invoke(new Action(() =>
                             {
-                                Invoke(new Action(() => Equipment_Ports.SelectedItem = String.Format("{0,-20}", item.Порт) + item.Включен.ToString()));
-                                //myeList.ClickPort(Equipment_Ports);
-                            }
+                                Equipment_Ports.Items.Add(item.Порт);
+                            Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].SubItems.Add(portNameTable.First(q => q.Порт == item.Порт).Expr5);
+                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = item.Включен ? Color.LightGreen : Color.LightPink;
+                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].Tag = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor;
+                                if (PORT_id == item.ID)
+                                {
+                                    //Equipment_Ports.FocusedItem = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1];
+                                    Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = Color.LightSkyBlue;
+                                    //myeList.ClickPort(Equipment_Ports);
+                                }
+                            }));
+                            
                         }//));
                     }
                     //Equipment_Ports.Items.AddRange(portids.Values.ToArray());
@@ -200,7 +210,7 @@ namespace Кабельный_журнал
                             Controls.Add(linkLabel1);
                             linkLabel1.LinkClicked += LinkLabel1_LinkClicked;
                         }
-                        Equipment_Ports.Sorted = true;
+                        //Equipment_Ports.Sorted = true;
                         Equipment_Name.Text = Text = equipmentRow.Оборудование;
                         Equipment_EO.Text = equipmentRow.EO == 0 ? "" : equipmentRow.EO.ToString();
                         Equipment_MAC.Text = equipmentRow.Mac;
@@ -262,6 +272,11 @@ namespace Кабельный_журнал
                 TabControl tabControl1 = new TabControl();
                 tabControl1.Parent = tabPageConsole;
                 tabControl1.Dock = DockStyle.Fill;
+                tabControl1.Alignment = TabAlignment.Left;
+                tabControl1.SizeMode = TabSizeMode.Fixed;
+                tabControl1.ItemSize = new Size(32, 50);
+                tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+                tabControl1.DrawItem += TabControl1_DrawItem;
                 foreach (var item in ((Equipment)((LinkLabel)sender).Parent).portids.Values)
                 {
                     TabPage tabPage = new TabPage(item);
@@ -293,7 +308,6 @@ namespace Кабельный_журнал
                     bool sw_po_mac_st;
                     List<string> mac = new List<string>();
                     bool sh;
-                    bool sp_profast;
                     bool sp_bpduguard;
                     string media_type;
                     bool udld_port;
@@ -308,51 +322,157 @@ namespace Кабельный_журнал
                     }
                     if (sw_mode == "access")
                     {
-                        try
+                        
+                    }
+                    else if (sw_mode == "trunk")
+                    {
+                        
+                    }
+                    try
+                    {
+                        sw_po = ((List<string>)tabPage.Tag).Find(q => q.Trim() == "switchport port-security").Contains("switchport port-security");
+                    }
+                    catch (Exception)
+                    {
+                        sw_po = false;
+                    }
+                    try
+                    {
+                        sw_po_mac_st = ((List<string>)tabPage.Tag).Find(q => q.Trim() == "switchport port-security mac-address sticky").Contains("switchport port-security mac-address sticky");
+                    }
+                    catch (Exception)
+                    {
+                        sw_po_mac_st = false;
+                    }
+                    try
+                    {
+                        mac = ((List<string>)tabPage.Tag).FindAll(q => q.Contains(" mac-address "));
+                        for (int i = 0; i < mac.Count; i++)
                         {
-                            sw_po = ((List<string>)tabPage.Tag).Find(q => q.Trim() == "switchport port-security").Contains("switchport port-security");
+                            mac[i] = mac[i].Remove(0, mac[i].IndexOf(" mac-address ") + " mac-address ".Length);
+                            mac[i] = mac[i].Remove(0, mac[i].IndexOf("sticky ") + "sticky ".Length);
                         }
-                        catch (Exception)
+                        mac.Remove("");
+                    }
+                    catch (Exception)
+                    {
+                        mac = new List<string>();
+                    }
+                    try
+                    {
+                        sp_bpduguard = ((List<string>)tabPage.Tag).Find(q => q.Contains(" bpduguard ")).Contains(" bpduguard ");
+                    }
+                    catch (Exception)
+                    {
+                        sp_bpduguard = false;
+                    }
+                    try
+                    {
+                        udld_port = ((List<string>)tabPage.Tag).Find(q => q.Contains("udld port")).Contains("udld port");
+                    }
+                    catch (Exception)
+                    {
+                        udld_port = false;
+                    }
+                    try
+                    {
+                        var ss = ((List<string>)tabPage.Tag).Find(q => q.Contains("duplex "));
+                        duplex = s.Remove(0, s.IndexOf("duplex ") + 1);
+                        duplex = duplex == "" ? "auto" : duplex;
+                    }
+                    catch (Exception)
+                    {
+                        duplex = "auto";
+                    }
+                    try
+                    {
+                        var ss = ((List<string>)tabPage.Tag).Find(q => q.Contains("media-type "));
+                        media_type = s.Remove(0, s.IndexOf("media-type ") + 1);
+                    }
+                    catch (Exception)
+                    {
+                        media_type = "";
+                    }
+                    try
+                    {
+                        sh = ((List<string>)tabPage.Tag).Find(q => q.Contains("shutdown")).Contains("shutdown");
+                    }
+                    catch (Exception)
+                    {
+                        sh = false;
+                    }
+                    try
+                    {
+                        var ss = ((List<string>)tabPage.Tag).Find(q => q.Contains(" allowed vlan ") || q.Contains(" access vlan "));
+                        var vlanss = ss.Remove(0, ss.IndexOf(" vlan ") + " vlan ".Length).Split(',');
+                        vlans = new int[vlanss.Length];
+                        for (int i = 0; i < vlanss.Length; i++)
                         {
-                            sw_po = false;
+                            vlans[i] = Convert.ToInt32(vlanss[i]);
                         }
-                        try
-                        {
-                            sw_po_mac_st = ((List<string>)tabPage.Tag).Find(q => q.Trim() == "switchport port-security mac-address sticky").Contains("switchport port-security mac-address sticky");
-                        }
-                        catch (Exception)
-                        {
-                            sw_po_mac_st = false;
-                        }
-                        try
-                        {
-                            mac = ((List<string>)tabPage.Tag).FindAll(q => q.Contains("mac-address"));
-                            for (int i = 0; i < mac.Count; i++)
-                            {
-                                mac[i] = mac[i].Remove(0, mac[i].IndexOf("mac-address") + "mac-address".Length + 1);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            
-                        }
-                        try
-                        {
-                            sh = ((List<string>)tabPage.Tag).Find(q => q.Contains("shutdown")).Contains("shutdown");
-                        }
-                        catch (Exception)
-                        {
-                            sh = false;
-                        }
+                    }
+                    catch (Exception)
+                    {
+                        vlans = new int[0];
+                    }
+                    try
+                    {
+                        var ss = ((List<string>)tabPage.Tag).Find(q => q.Contains(" native vlan "));
+                        native_vlan = Convert.ToInt32(ss.Remove(0, ss.IndexOf(" vlan ") + " vlan ".Length).Split(','));
+                    }
+                    catch (Exception)
+                    {
+                        native_vlan = 0;
+                    }
+                    try
+                    {
 
                     }
+                    catch (Exception)
+                    {
 
+                    }
+                    interfaces.Add(new Interface() { description = description, duplex = duplex, mac = mac, media_type = media_type, native_vlan = native_vlan, sh = sh, sp_bpduguard = sp_bpduguard, sw_mode = sw_mode, sw_po = sw_po, sw_po_mac_st = sw_po_mac_st, udld_port = udld_port, vlans = vlans });
                     //streamWriter.WriteLine("sh ru in " + item);
                 }
 
 
 
             }
+        }
+
+        private void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            Brush _textBrush;
+
+            // Get the item from the collection.
+            TabPage _tabPage = ((TabControl)sender).TabPages[e.Index];
+
+            // Get the real bounds for the tab rectangle.
+            Rectangle _tabBounds = ((TabControl)sender).GetTabRect(e.Index);
+
+            if (e.State == DrawItemState.Selected)
+            {
+
+                // Draw a different background color, and don't paint a focus rectangle.
+                _textBrush = new SolidBrush(Color.Black);
+                //g.FillRectangle(Brushes.Gray, e.Bounds);
+            }
+            else
+            {
+                _textBrush = new SolidBrush(e.ForeColor);
+                e.DrawBackground();
+            }
+
+            // Use our own font.
+            Font _tabFont = new Font("Arial", 10.0f, FontStyle.Bold, GraphicsUnit.Pixel);
+
+            // Draw string. Center the text.
+            StringFormat _stringFlags = new StringFormat();
+            _stringFlags.Alignment = StringAlignment.Center;
+            _stringFlags.LineAlignment = StringAlignment.Center;
+            g.DrawString(_tabPage.Text, _tabFont, _textBrush, _tabBounds, new StringFormat(_stringFlags));
         }
 
         private void TabPage_Enter(object sender, EventArgs e)
@@ -374,7 +494,7 @@ namespace Кабельный_журнал
         {
             //Invoke(new Action(() =>
             //{
-                Equipment_Ports = new ListBox();
+                Equipment_Ports = new ListView();
                 label6 = new Label();
                 Equipment_IP = new TextBox();
                 linkLabel1 = new LinkLabel();
@@ -416,12 +536,21 @@ namespace Кабельный_журнал
                 // 
                 // Equipment_Ports
                 // 
-                Equipment_Ports.FormattingEnabled = true;
+                //Equipment_Ports.FormattingEnabled = true;
                 Equipment_Ports.Location = new Point(6, 146);
                 Equipment_Ports.Name = "Equipment_Ports";
                 Equipment_Ports.Size = new Size(195, 212);
                 Equipment_Ports.TabIndex = 1;
-                Equipment_Ports.MouseDoubleClick += Equipment_Ports_MouseDoubleClick;
+                Equipment_Ports.View = View.Details;
+                Equipment_Ports.Columns.Add("col1", "");
+                Equipment_Ports.Columns.Add("col1", "");
+                Equipment_Ports.Columns[0].Width = 60;
+                Equipment_Ports.Columns[1].Width = 110;
+                Equipment_Ports.FullRowSelect = true;
+                Equipment_Ports.HeaderStyle = ColumnHeaderStyle.None;
+                Equipment_Ports.Alignment = ListViewAlignment.Left;
+                Equipment_Ports.ListViewItemSorter = new AlphanumComparatorFast();
+                //Equipment_Ports.MouseDoubleClick += Equipment_Ports_MouseDoubleClick;
                 // 
                 // label6
                 // 
@@ -550,12 +679,20 @@ namespace Кабельный_журнал
 
         private void Equipment_Ports_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var currentEquipment = ((Equipment)((ListBox)sender).Parent);
+            var currentEquipment = ((Equipment)((ListView)sender).Parent);
             DataSet2ReadOnly.mainRow nmainRow = null;
             foreach (var item in currentEquipment.portids)
             {
-                if (item.Value == currentEquipment.Equipment_Ports.SelectedItem.ToString().Remove(20).Trim())
+                for (int i = 0; i < ((ListView)sender).Items.Count; i++)
                 {
+                    if (((ListView)sender).Items[i].BackColor == Color.LightSkyBlue)
+                    {
+                        ((ListView)sender).Items[i].BackColor = ((Color)((ListView)sender).Items[i].Tag);
+                    }
+                }
+                if (item.Value == ((ListView)sender).FocusedItem.Text)
+                {
+                    ((ListView)sender).FocusedItem.BackColor = Color.Blue;
                     DataSet2ReadOnlyTableAdapters.mainTableAdapter mainTableAdapter = new DataSet2ReadOnlyTableAdapters.mainTableAdapter();
                     var mainTable = mainTableAdapter.GetData(item.Key);
                     try
@@ -753,12 +890,12 @@ namespace Кабельный_журнал
                 equipment.ContextMenuStrip = Form1.contextMenuStrip1;
                 equipment.Equipment_Ports.SelectedIndexChanged += Equipment_Ports_SelectedIndexChanged;
                 parent.Controls.Add(equipment);
-                if (equipment.Equipment_Ports.SelectedIndex >= 0)
+                if (equipment.Equipment_Ports.SelectedIndices.Count > 0)
                 {
                     DataSet2ReadOnly.mainRow nmainRow = null;
                     foreach (var item in equipment.portids)
                     {
-                        if (item.Value == equipment.Equipment_Ports.SelectedItem.ToString().Remove(20).Trim())
+                        if (item.Value == equipment.Equipment_Ports.SelectedItems[0].ToString().Remove(20).Trim())
                         {
                             DataSet2ReadOnlyTableAdapters.mainTableAdapter mainTableAdapter = new DataSet2ReadOnlyTableAdapters.mainTableAdapter();
                             var mainTable = mainTableAdapter.GetData(item.Key);
@@ -774,6 +911,7 @@ namespace Кабельный_журнал
                         //ClickPort(equipment.Equipment_Ports);
                     }
                 }
+                //*/
             }));
             Update_Position();
         }
@@ -851,4 +989,97 @@ namespace Кабельный_журнал
             }
         }
     }
+
+    public class AlphanumComparatorFast : IComparer
+    {
+        public int Compare(object x, object y)
+        {
+            string s1 = x as string;
+            if (s1 == null)
+            {
+                return 0;
+            }
+            string s2 = y as string;
+            if (s2 == null)
+            {
+                return 0;
+            }
+
+            int len1 = s1.Length;
+            int len2 = s2.Length;
+            int marker1 = 0;
+            int marker2 = 0;
+
+            // Walk through two the strings with two markers.
+            while (marker1 < len1 && marker2 < len2)
+            {
+                char ch1 = s1[marker1];
+                char ch2 = s2[marker2];
+
+                // Some buffers we can build up characters in for each chunk.
+                char[] space1 = new char[len1];
+                int loc1 = 0;
+                char[] space2 = new char[len2];
+                int loc2 = 0;
+
+                // Walk through all following characters that are digits or
+                // characters in BOTH strings starting at the appropriate marker.
+                // Collect char arrays.
+                do
+                {
+                    space1[loc1++] = ch1;
+                    marker1++;
+
+                    if (marker1 < len1)
+                    {
+                        ch1 = s1[marker1];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (char.IsDigit(ch1) == char.IsDigit(space1[0]));
+
+                do
+                {
+                    space2[loc2++] = ch2;
+                    marker2++;
+
+                    if (marker2 < len2)
+                    {
+                        ch2 = s2[marker2];
+                    }
+                    else
+                    {
+                        break;
+                    }
+                } while (char.IsDigit(ch2) == char.IsDigit(space2[0]));
+
+                // If we have collected numbers, compare them numerically.
+                // Otherwise, if we have strings, compare them alphabetically.
+                string str1 = new string(space1);
+                string str2 = new string(space2);
+
+                int result;
+
+                if (char.IsDigit(space1[0]) && char.IsDigit(space2[0]))
+                {
+                    int thisNumericChunk = int.Parse(str1);
+                    int thatNumericChunk = int.Parse(str2);
+                    result = thisNumericChunk.CompareTo(thatNumericChunk);
+                }
+                else
+                {
+                    result = str1.CompareTo(str2);
+                }
+
+                if (result != 0)
+                {
+                    return result;
+                }
+            }
+            return len1 - len2;
+        }
+    }
+
 }
