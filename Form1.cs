@@ -127,7 +127,20 @@ namespace Кабельный_журнал
             string equi = textBox6.Text;
             string mac_ = textBox5.Text;
             DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter dataTableEquipmentAdapter = new DataSet2ReadOnlyTableAdapters.DataTableEquipmentAdapter();
-            dataGridView1.DataSource = dataTableEquipmentAdapter.GetData(home, room, EO, mac_, equi);
+            do
+            {
+                try
+                {
+                    dataGridView1.DataSource = dataTableEquipmentAdapter.GetData(home, room, EO, mac_, equi);
+                }
+                catch (Exception)
+                {
+                    
+                }
+            } while (dataGridView1.DataSource==null);
+            
+            
+
             dataGridView1.Columns[7].Visible = false;
         }
 
@@ -164,6 +177,16 @@ namespace Кабельный_журнал
         }
 
         private void Equipment_Ports_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
