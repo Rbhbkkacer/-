@@ -190,5 +190,53 @@ namespace Кабельный_журнал
         {
 
         }
+
+        private void toggleSwitch2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((ToggleSwitch)sender).Checked)
+            {
+
+            }
+            else
+            {
+
+            }
+        }
+
+        private void dataGridView2_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+
+        }
+
+        private void comboBox4_SelectedValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView2_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue == "")
+            {
+                if ((string)((DataGridView)sender).SelectedCells[0].FormattedValue != "")
+                {
+                    ///ААААААА, это ужасно!!!!!!
+                    Task.Run(new Action(() =>
+                    {
+                        Invoke(new Action(() =>
+                        {
+                            ((DataGridView)sender).Rows.RemoveAt(e.RowIndex);
+                        }));
+                    }));
+                }
+            }
+        }
+
+        private void comboBox4_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                //((ComboBox)sender).Text;
+            }
+        }
     }
 }

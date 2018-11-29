@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "000000-000000",
             "vlan access",
@@ -52,8 +53,12 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.port1 = new Кабельный_журнал.Port();
-            this.dataSet1 = new Кабельный_журнал.DataSet1();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.Vlan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -76,13 +81,15 @@
             this.toggleSwitch4 = new Кабельный_журнал.ToggleSwitch();
             this.toggleSwitch3 = new Кабельный_журнал.ToggleSwitch();
             this.label6 = new System.Windows.Forms.Label();
+            this.dataSet1 = new Кабельный_журнал.DataSet1();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -275,6 +282,7 @@
             // 
             // port1
             // 
+            this.port1.BackColor = System.Drawing.Color.White;
             this.port1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.port1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.port1.Location = new System.Drawing.Point(3, 3);
@@ -282,13 +290,12 @@
             this.port1.Size = new System.Drawing.Size(853, 394);
             this.port1.TabIndex = 4;
             // 
-            // dataSet1
-            // 
-            this.dataSet1.DataSetName = "DataSet1";
-            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label17);
+            this.tabPage3.Controls.Add(this.dataGridView2);
+            this.tabPage3.Controls.Add(this.comboBox4);
+            this.tabPage3.Controls.Add(this.label16);
             this.tabPage3.Controls.Add(this.comboBox1);
             this.tabPage3.Controls.Add(this.comboBox3);
             this.tabPage3.Controls.Add(this.label1);
@@ -315,6 +322,91 @@
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "tabPage3";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label17.Location = new System.Drawing.Point(6, 99);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(88, 19);
+            this.label17.TabIndex = 45;
+            this.label17.Text = "Vlan allowed";
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AllowUserToResizeColumns = false;
+            this.dataGridView2.AllowUserToResizeRows = false;
+            this.dataGridView2.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView2.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.ColumnHeadersVisible = false;
+            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Vlan});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Format = "N0";
+            dataGridViewCellStyle1.NullValue = null;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView2.EnableHeadersVisualStyles = false;
+            this.dataGridView2.Location = new System.Drawing.Point(103, 97);
+            this.dataGridView2.MultiSelect = false;
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.RowHeadersVisible = false;
+            this.dataGridView2.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView2.ShowCellErrors = false;
+            this.dataGridView2.ShowCellToolTips = false;
+            this.dataGridView2.ShowEditingIcon = false;
+            this.dataGridView2.ShowRowErrors = false;
+            this.dataGridView2.Size = new System.Drawing.Size(103, 125);
+            this.dataGridView2.TabIndex = 44;
+            this.dataGridView2.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_RowLeave);
+            this.dataGridView2.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView2_RowsRemoved);
+            // 
+            // Vlan
+            // 
+            this.Vlan.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Vlan.HeaderText = "Vlan";
+            this.Vlan.Name = "Vlan";
+            this.Vlan.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.comboBox4.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBox4.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.comboBox4.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.comboBox4.FormatString = "N0";
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Items.AddRange(new object[] {
+            "1",
+            "100",
+            "12",
+            "192"});
+            this.comboBox4.Location = new System.Drawing.Point(481, 102);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(103, 26);
+            this.comboBox4.Sorted = true;
+            this.comboBox4.TabIndex = 43;
+            this.comboBox4.SelectedValueChanged += new System.EventHandler(this.comboBox4_SelectedValueChanged);
+            this.comboBox4.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBox4_KeyUp);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label16.Location = new System.Drawing.Point(384, 104);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(79, 19);
+            this.label16.TabIndex = 42;
+            this.label16.Text = "Vlan native";
             // 
             // comboBox1
             // 
@@ -473,6 +565,7 @@
             this.toggleSwitch2.TabIndex = 29;
             this.toggleSwitch2.Text = "toggleSwitch2";
             this.toggleSwitch2.UseVisualStyleBackColor = true;
+            this.toggleSwitch2.CheckedChanged += new System.EventHandler(this.toggleSwitch2_CheckedChanged);
             // 
             // listView1
             // 
@@ -552,6 +645,11 @@
             this.label6.TabIndex = 32;
             this.label6.Text = "MAC sticky";
             // 
+            // dataSet1
+            // 
+            this.dataSet1.DataSetName = "DataSet1";
+            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -571,9 +669,10 @@
             this.tabPage1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataSet1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -627,6 +726,11 @@
         private ToggleSwitch toggleSwitch4;
         private ToggleSwitch toggleSwitch3;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBox4;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Vlan;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.DataGridView dataGridView2;
     }
 }
 

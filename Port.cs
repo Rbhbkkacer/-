@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -12,12 +6,12 @@ namespace Кабельный_журнал
 {
     public partial class Port : Panel
     {
-        public ComboBox comboBox1;
-        public ComboBox comboBox3;
+        public ComboBox _duplex;
+        public ComboBox _mdia_type;
         public Label label1;
         public Label label15;
         public Label label2;
-        public ComboBox comboBox2;
+        public ComboBox _speed;
         public Label label3;
         public Label label14;
         public Label label4;
@@ -33,6 +27,11 @@ namespace Кабельный_журнал
         public Label label5;
         public ToggleSwitch _port_sequrity;
         public ToggleSwitch _mac_sticky;
+        public Label label17;
+        public DataGridView _vlan_allowed;
+        public DataGridViewTextBoxColumn Vlan;
+        public ComboBox _vlan_native;
+        public Label label16;
         public Label label6;
 
         public Port()
@@ -42,13 +41,13 @@ namespace Кабельный_журнал
 
         private void InitializeComponent()
         {
-            
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this._duplex = new System.Windows.Forms.ComboBox();
+            this._mdia_type = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this._speed = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -65,37 +64,43 @@ namespace Кабельный_журнал
             this._access = new Кабельный_журнал.ToggleSwitch();
             this._port_sequrity = new Кабельный_журнал.ToggleSwitch();
             this._mac_sticky = new Кабельный_журнал.ToggleSwitch();
+            this.label17 = new System.Windows.Forms.Label();
+            this._vlan_allowed = new System.Windows.Forms.DataGridView();
+            this.Vlan = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this._vlan_native = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this._vlan_allowed)).BeginInit();
             this.SuspendLayout();
             // 
             // comboBox1
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.comboBox1.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this._duplex.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._duplex.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this._duplex.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._duplex.FormattingEnabled = true;
+            this._duplex.Items.AddRange(new object[] {
             "auto",
             "full",
             "half"});
-            this.comboBox1.Location = new System.Drawing.Point(478, 3);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(103, 26);
-            this.comboBox1.TabIndex = 18;
+            this._duplex.Location = new System.Drawing.Point(478, 3);
+            this._duplex.Name = "comboBox1";
+            this._duplex.Size = new System.Drawing.Size(103, 26);
+            this._duplex.TabIndex = 18;
             // 
             // comboBox3
             // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.comboBox3.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
+            this._mdia_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._mdia_type.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this._mdia_type.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._mdia_type.FormattingEnabled = true;
+            this._mdia_type.Items.AddRange(new object[] {
             "auto-select",
             "sfp",
             "rj45"});
-            this.comboBox3.Location = new System.Drawing.Point(478, 67);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(103, 26);
-            this.comboBox3.TabIndex = 22;
+            this._mdia_type.Location = new System.Drawing.Point(478, 67);
+            this._mdia_type.Name = "comboBox3";
+            this._mdia_type.Size = new System.Drawing.Size(103, 26);
+            this._mdia_type.TabIndex = 22;
             // 
             // label1
             // 
@@ -129,20 +134,20 @@ namespace Кабельный_журнал
             // 
             // comboBox2
             // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.comboBox2.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {
+            this._speed.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._speed.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this._speed.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._speed.FormattingEnabled = true;
+            this._speed.Items.AddRange(new object[] {
             "auto",
             "10",
             "100",
             "1000",
             "10000"});
-            this.comboBox2.Location = new System.Drawing.Point(478, 35);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(103, 26);
-            this.comboBox2.TabIndex = 20;
+            this._speed.Location = new System.Drawing.Point(478, 35);
+            this._speed.Name = "comboBox2";
+            this._speed.Size = new System.Drawing.Size(103, 26);
+            this._speed.TabIndex = 20;
             // 
             // label3
             // 
@@ -174,13 +179,13 @@ namespace Кабельный_журнал
             this.label4.TabIndex = 5;
             this.label4.Text = "Description";
             // 
-            // textBox7
+            // _description
             // 
             this._description.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._description.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this._description.Location = new System.Drawing.Point(100, 3);
-            this._description.Name = "textBox7";
-            this._description.Size = new System.Drawing.Size(103, 19);
+            this._description.Name = "_description";
+            this._description.Size = new System.Drawing.Size(200, 19);
             this._description.TabIndex = 8;
             // 
             // label13
@@ -203,7 +208,7 @@ namespace Кабельный_журнал
             this.label12.TabIndex = 16;
             this.label12.Text = "MAC address";
             // 
-            // listView1
+            // _mac
             // 
             this._mac.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this._mac.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -215,7 +220,7 @@ namespace Кабельный_журнал
             this._mac.LabelEdit = true;
             this._mac.Location = new System.Drawing.Point(100, 162);
             this._mac.MultiSelect = false;
-            this._mac.Name = "listView1";
+            this._mac.Name = "_mac";
             this._mac.Scrollable = false;
             this._mac.ShowGroups = false;
             this._mac.Size = new System.Drawing.Size(264, 69);
@@ -258,59 +263,141 @@ namespace Кабельный_журнал
             this.label6.TabIndex = 13;
             this.label6.Text = "MAC sticky";
             // 
-            // toggleSwitch1
+            // _enable
             // 
             this._enable.AutoSize = true;
             this._enable.Location = new System.Drawing.Point(100, 30);
-            this._enable.Name = "toggleSwitch1";
+            this._enable.Name = "_enable";
             this._enable.Padding = new System.Windows.Forms.Padding(5);
             this._enable.Size = new System.Drawing.Size(103, 27);
             this._enable.TabIndex = 9;
             this._enable.Text = "toggleSwitch1";
             this._enable.UseVisualStyleBackColor = true;
+            //this._enable.CheckedChanged += _enable_CheckedChanged;
             // 
-            // toggleSwitch2
+            // _access
             // 
             this._access.AutoSize = true;
             this._access.Location = new System.Drawing.Point(100, 61);
-            this._access.Name = "toggleSwitch2";
+            this._access.Name = "_access";
             this._access.Padding = new System.Windows.Forms.Padding(5);
             this._access.Size = new System.Drawing.Size(103, 27);
             this._access.TabIndex = 10;
             this._access.Text = "toggleSwitch2";
             this._access.UseVisualStyleBackColor = true;
+            //this._access.CheckedChanged += new System.EventHandler(this._access_CheckedChanged);
             // 
-            // toggleSwitch4
+            // _port_sequrity
             // 
             this._port_sequrity.AutoSize = true;
             this._port_sequrity.Location = new System.Drawing.Point(100, 127);
-            this._port_sequrity.Name = "toggleSwitch4";
+            this._port_sequrity.Name = "_port_sequrity";
             this._port_sequrity.Padding = new System.Windows.Forms.Padding(5);
             this._port_sequrity.Size = new System.Drawing.Size(103, 27);
             this._port_sequrity.TabIndex = 14;
             this._port_sequrity.Text = "toggleSwitch4";
             this._port_sequrity.UseVisualStyleBackColor = true;
             // 
-            // toggleSwitch3
+            // _mac_sticky
             // 
             this._mac_sticky.AutoSize = true;
             this._mac_sticky.Location = new System.Drawing.Point(100, 94);
-            this._mac_sticky.Name = "toggleSwitch3";
+            this._mac_sticky.Name = "_mac_sticky";
             this._mac_sticky.Padding = new System.Windows.Forms.Padding(5);
             this._mac_sticky.Size = new System.Drawing.Size(103, 27);
             this._mac_sticky.TabIndex = 12;
             this._mac_sticky.Text = "toggleSwitch3";
             this._mac_sticky.UseVisualStyleBackColor = true;
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label17.Location = new System.Drawing.Point(6, 99);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(88, 19);
+            this.label17.TabIndex = 45;
+            this.label17.Text = "Vlan allowed";
+            // 
+            // dataGridView2
+            // 
+            this._vlan_allowed.AllowUserToResizeColumns = false;
+            this._vlan_allowed.AllowUserToResizeRows = false;
+            this._vlan_allowed.BackgroundColor = System.Drawing.SystemColors.Window;
+            this._vlan_allowed.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this._vlan_allowed.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.EnableWithoutHeaderText;
+            this._vlan_allowed.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this._vlan_allowed.ColumnHeadersVisible = false;
+            this._vlan_allowed.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Vlan});
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Format = "N0";
+            dataGridViewCellStyle1.NullValue = null;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this._vlan_allowed.DefaultCellStyle = dataGridViewCellStyle1;
+            this._vlan_allowed.EnableHeadersVisualStyles = false;
+            this._vlan_allowed.Location = new System.Drawing.Point(103, 97);
+            this._vlan_allowed.MultiSelect = false;
+            this._vlan_allowed.Name = "dataGridView2";
+            this._vlan_allowed.RowHeadersVisible = false;
+            this._vlan_allowed.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this._vlan_allowed.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this._vlan_allowed.ShowCellErrors = false;
+            this._vlan_allowed.ShowCellToolTips = false;
+            this._vlan_allowed.ShowEditingIcon = false;
+            this._vlan_allowed.ShowRowErrors = false;
+            this._vlan_allowed.Size = new System.Drawing.Size(103, 150);
+            this._vlan_allowed.TabIndex = 44;
+            this._vlan_allowed.RowLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this._vlan_allowed_RowLeave);
+            this._vlan_allowed.UserDeletingRow += _vlan_allowed_UserDeletingRow;
+            // 
+            // Vlan
+            // 
+            this.Vlan.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Vlan.HeaderText = "Vlan";
+            this.Vlan.Name = "Vlan";
+            this.Vlan.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            // 
+            // comboBox4
+            // 
+            this._vlan_native.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this._vlan_native.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this._vlan_native.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this._vlan_native.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._vlan_native.FormatString = "N0";
+            this._vlan_native.FormattingEnabled = true;
+            this._vlan_native.Location = new System.Drawing.Point(478, 99);
+            this._vlan_native.Name = "comboBox4";
+            this._vlan_native.Size = new System.Drawing.Size(103, 26);
+            this._vlan_native.Sorted = true;
+            this._vlan_native.TabIndex = 43;
+            this._vlan_native.SelectedValueChanged += new System.EventHandler(this._vlan_native_SelectedValueChanged);
+            this._vlan_native.KeyUp += new System.Windows.Forms.KeyEventHandler(this._vlan_native_KeyUp);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label16.Location = new System.Drawing.Point(381, 101);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(79, 19);
+            this.label16.TabIndex = 42;
+            // 
             // Port
             // 
+            this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.comboBox3);
+            this.Controls.Add(this._duplex);
+            this.Controls.Add(this._mdia_type);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.comboBox2);
+            this.Controls.Add(this._speed);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label4);
@@ -324,13 +411,132 @@ namespace Кабельный_журнал
             this.Controls.Add(this._port_sequrity);
             this.Controls.Add(this._mac_sticky);
             this.Controls.Add(this.label6);
+            this.Controls.Add(this._vlan_native);
+            this.Controls.Add(this._vlan_allowed);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.label17);
             this.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Size = new System.Drawing.Size(808, 451);
-            this.BackColor = System.Drawing.Color.White;
             this.TabIndex = 24;
+            ((System.ComponentModel.ISupportInitialize)(this._vlan_allowed)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
+            if (_access.Checked)
+            {
+                label5.Hide();
+                label6.Hide();
+                label12.Hide();
+                _port_sequrity.Hide();
+                _mac_sticky.Hide();
+                _mac.Hide();
+                label17.Show();
+                _vlan_allowed.Show();
+                label16.Text = "Native vlan";
+            }
+            else
+            {
+                label5.Show();
+                label6.Show();
+                label12.Show();
+                _port_sequrity.Show();
+                _mac_sticky.Show();
+                _mac.Show();
+                label17.Hide();
+                _vlan_allowed.Hide();
+                label16.Text = "Vlan";
+            }
+        }
+
+        private void _vlan_allowed_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            ((Cmd)((TabPage)((TabControl)((TabPage)((Port)((DataGridView)sender).Parent).Parent).Parent).Parent).Tag).re_vlan(e.Row.Cells[0].Value.ToString());
+        }
+
+        public void _enable_CheckedChanged(object sender, EventArgs e)
+        {
+            ((Cmd)((TabPage)((Port)((ToggleSwitch)sender).Parent).Parent).Tag).sh(((ToggleSwitch)sender).Checked);
+        }
+
+        private void _vlan_native_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                //((ComboBox)sender).Text;
+            }
+        }
+
+        public void _vlan_native_SelectedValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void _vlan_allowed_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+
+        }
+
+        private void _vlan_allowed_RowLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            Cmd cmd = (Cmd)((TabPage)((TabControl)((TabPage)((Port)((DataGridView)sender).Parent).Parent).Parent).Parent).Tag;
+            try
+            {
+                if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue == "")
+                {
+                    if ((string)((DataGridView)sender).SelectedCells[0].FormattedValue != "")
+                    {
+                        var qqq = (string)((DataGridView)sender).SelectedCells[0].FormattedValue;
+                        ///ААААААА, это ужасно!!!!!!
+                        Task.Run(new Action(() =>
+                        {
+                            Invoke(new Action(() =>
+                            {
+                                cmd.re_vlan(qqq);
+                                ((DataGridView)sender).Rows.RemoveAt(e.RowIndex);
+                            }));
+                        }));
+                    }
+                }
+                if ((string)((DataGridView)sender).SelectedCells[0].FormattedValue == "")
+                {
+                    if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue != "")
+                    {
+                        cmd.add_vlan((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue);
+
+                    }
+                }
+            } catch (Exception)
+            {
+
+            }
+        }
+
+        public void _access_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((ToggleSwitch)sender).Checked)
+            {
+                label5.Hide();
+                label6.Hide();
+                label12.Hide();
+                _port_sequrity.Hide();
+                _mac_sticky.Hide();
+                _mac.Hide();
+                label17.Show();
+                _vlan_allowed.Show();
+                label16.Text = "Native vlan";
+            }
+            else
+            {
+                label5.Show();
+                label6.Show();
+                label12.Show();
+                _port_sequrity.Show();
+                _mac_sticky.Show();
+                _mac.Show();
+                label17.Hide();
+                _vlan_allowed.Hide();
+                label16.Text = "Vlan";
+            }
         }
     }
 }
