@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "000000-000000",
             "vlan access",
             "Удалить"}, -1);
@@ -61,7 +61,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.port1 = new Кабельный_журнал.Port();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label17 = new System.Windows.Forms.Label();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
@@ -80,17 +79,18 @@
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
-            this.toggleSwitch1 = new Кабельный_журнал.ToggleSwitch();
-            this.toggleSwitch2 = new Кабельный_журнал.ToggleSwitch();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.dataSet1 = new Кабельный_журнал.DataSet1();
+            this.port1 = new Кабельный_журнал.Port();
+            this.toggleSwitch1 = new Кабельный_журнал.ToggleSwitch();
+            this.toggleSwitch2 = new Кабельный_журнал.ToggleSwitch();
             this.toggleSwitch4 = new Кабельный_журнал.ToggleSwitch();
             this.toggleSwitch3 = new Кабельный_журнал.ToggleSwitch();
-            this.dataSet1 = new Кабельный_журнал.DataSet1();
             this.menuStrip1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -137,8 +137,9 @@
             // выходToolStripMenuItem
             // 
             this.выходToolStripMenuItem.Name = "выходToolStripMenuItem";
-            this.выходToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.выходToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.выходToolStripMenuItem.Text = "Выход";
+            this.выходToolStripMenuItem.Click += new System.EventHandler(this.выходToolStripMenuItem_Click);
             // 
             // настройкиToolStripMenuItem
             // 
@@ -154,7 +155,7 @@
             this.логинToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox1});
             this.логинToolStripMenuItem.Name = "логинToolStripMenuItem";
-            this.логинToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.логинToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.логинToolStripMenuItem.Text = "Логин";
             // 
             // toolStripTextBox1
@@ -169,7 +170,7 @@
             this.парольToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripTextBox2});
             this.парольToolStripMenuItem.Name = "парольToolStripMenuItem";
-            this.парольToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.парольToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.парольToolStripMenuItem.Text = "Пароль";
             // 
             // toolStripTextBox2
@@ -177,7 +178,6 @@
             this.toolStripTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.toolStripTextBox2.Name = "toolStripTextBox2";
             this.toolStripTextBox2.Size = new System.Drawing.Size(100, 16);
-            ((System.Windows.Forms.TextBox)this.toolStripTextBox2.Control).UseSystemPasswordChar = true;
             this.toolStripTextBox2.TextChanged += new System.EventHandler(this.toolStripTextBox2_TextChanged);
             // 
             // tabPage2
@@ -360,16 +360,6 @@
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // port1
-            // 
-            this.port1.BackColor = System.Drawing.Color.White;
-            this.port1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.port1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.port1.Location = new System.Drawing.Point(3, 3);
-            this.port1.Name = "port1";
-            this.port1.Size = new System.Drawing.Size(853, 394);
-            this.port1.TabIndex = 4;
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.label17);
@@ -424,16 +414,16 @@
             this.dataGridView2.ColumnHeadersVisible = false;
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Vlan});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.Format = "N0";
-            dataGridViewCellStyle2.NullValue = null;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.Format = "N0";
+            dataGridViewCellStyle4.NullValue = null;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView2.EnableHeadersVisualStyles = false;
             this.dataGridView2.Location = new System.Drawing.Point(103, 97);
             this.dataGridView2.MultiSelect = false;
@@ -624,29 +614,6 @@
             this.label12.TabIndex = 35;
             this.label12.Text = "MAC address";
             // 
-            // toggleSwitch1
-            // 
-            this.toggleSwitch1.AutoSize = true;
-            this.toggleSwitch1.Location = new System.Drawing.Point(103, 33);
-            this.toggleSwitch1.Name = "toggleSwitch1";
-            this.toggleSwitch1.Padding = new System.Windows.Forms.Padding(5);
-            this.toggleSwitch1.Size = new System.Drawing.Size(103, 27);
-            this.toggleSwitch1.TabIndex = 28;
-            this.toggleSwitch1.Text = "toggleSwitch1";
-            this.toggleSwitch1.UseVisualStyleBackColor = true;
-            // 
-            // toggleSwitch2
-            // 
-            this.toggleSwitch2.AutoSize = true;
-            this.toggleSwitch2.Location = new System.Drawing.Point(103, 64);
-            this.toggleSwitch2.Name = "toggleSwitch2";
-            this.toggleSwitch2.Padding = new System.Windows.Forms.Padding(5);
-            this.toggleSwitch2.Size = new System.Drawing.Size(103, 27);
-            this.toggleSwitch2.TabIndex = 29;
-            this.toggleSwitch2.Text = "toggleSwitch2";
-            this.toggleSwitch2.UseVisualStyleBackColor = true;
-            this.toggleSwitch2.CheckedChanged += new System.EventHandler(this.toggleSwitch2_CheckedChanged);
-            // 
             // listView1
             // 
             this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -656,9 +623,9 @@
             this.columnHeader3});
             this.listView1.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            listViewItem2.StateImageIndex = 0;
+            listViewItem4.StateImageIndex = 0;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem4});
             this.listView1.LabelEdit = true;
             this.listView1.Location = new System.Drawing.Point(103, 165);
             this.listView1.MultiSelect = false;
@@ -703,6 +670,44 @@
             this.label6.TabIndex = 32;
             this.label6.Text = "MAC sticky";
             // 
+            // dataSet1
+            // 
+            this.dataSet1.DataSetName = "DataSet1";
+            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // port1
+            // 
+            this.port1.BackColor = System.Drawing.Color.White;
+            this.port1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.port1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.port1.Location = new System.Drawing.Point(3, 3);
+            this.port1.Name = "port1";
+            this.port1.Size = new System.Drawing.Size(853, 394);
+            this.port1.TabIndex = 4;
+            // 
+            // toggleSwitch1
+            // 
+            this.toggleSwitch1.AutoSize = true;
+            this.toggleSwitch1.Location = new System.Drawing.Point(103, 33);
+            this.toggleSwitch1.Name = "toggleSwitch1";
+            this.toggleSwitch1.Padding = new System.Windows.Forms.Padding(5);
+            this.toggleSwitch1.Size = new System.Drawing.Size(103, 27);
+            this.toggleSwitch1.TabIndex = 28;
+            this.toggleSwitch1.Text = "toggleSwitch1";
+            this.toggleSwitch1.UseVisualStyleBackColor = true;
+            // 
+            // toggleSwitch2
+            // 
+            this.toggleSwitch2.AutoSize = true;
+            this.toggleSwitch2.Location = new System.Drawing.Point(103, 64);
+            this.toggleSwitch2.Name = "toggleSwitch2";
+            this.toggleSwitch2.Padding = new System.Windows.Forms.Padding(5);
+            this.toggleSwitch2.Size = new System.Drawing.Size(103, 27);
+            this.toggleSwitch2.TabIndex = 29;
+            this.toggleSwitch2.Text = "toggleSwitch2";
+            this.toggleSwitch2.UseVisualStyleBackColor = true;
+            this.toggleSwitch2.CheckedChanged += new System.EventHandler(this.toggleSwitch2_CheckedChanged);
+            // 
             // toggleSwitch4
             // 
             this.toggleSwitch4.AutoSize = true;
@@ -725,11 +730,6 @@
             this.toggleSwitch3.Text = "toggleSwitch3";
             this.toggleSwitch3.UseVisualStyleBackColor = true;
             // 
-            // dataSet1
-            // 
-            this.dataSet1.DataSetName = "DataSet1";
-            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -739,8 +739,11 @@
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Opacity = 0.97D;
+            this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

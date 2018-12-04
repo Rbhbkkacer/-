@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -66,10 +67,16 @@ namespace Кабельный_журнал
             }
             StandardInput.WriteLine("terminal length 0");
             s = StandardOutput.ReadLine();
-            StandardInput.WriteLine("terminal length 0");
             while (!(s.Contains("terminal length 0")))
             {
                 s = StandardOutput.ReadLine();
+                if (s == "Username: terminal length 0")
+                {
+                    MessageBox.Show("Неверный пароль", "Ошибка");
+                    exit();
+                    Dispose();
+                    return;
+                }
             }
             switch_name = s.Remove(s.IndexOf('#'));
             timer.Interval = 100000;
@@ -117,6 +124,7 @@ namespace Кабельный_журнал
         public List<string> GetPortConfig(string port)
         {
             StandardInput.WriteLine("end");
+            Thread.Sleep(100);
             List<string> vs = new List<string>();
             StandardInput.WriteLine("sh ru in " + port);
             s = StandardOutput.ReadLine();
@@ -149,6 +157,7 @@ namespace Кабельный_журнал
         private void conf_t()
         {
             StandardInput.WriteLine("end");
+            Thread.Sleep(100);
             StandardInput.WriteLine("conf t");
             s = StandardOutput.ReadLine();
             while (s != switch_name + "(config)#")
@@ -181,6 +190,7 @@ namespace Кабельный_журнал
         public void exit()
         {
             StandardInput.WriteLine("end");
+            Thread.Sleep(100);
             StandardInput.WriteLine("ex");
         }
         
@@ -233,6 +243,15 @@ namespace Кабельный_журнал
             StandardInput.WriteLine(@checked ? "sw po" : "no sw po");
             s = StandardOutput.ReadLine();
             while (!(s.Contains("sw po")))
+            {
+                s = StandardOutput.ReadLine();
+            }
+        }
+
+        internal void _description_TextChanged(string sender)
+        {
+            StandardInput.WriteLine(sender == "" ? "no des" : "des " + sender);
+            while (!(s.Contains("des")))
             {
                 s = StandardOutput.ReadLine();
             }

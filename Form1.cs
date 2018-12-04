@@ -28,10 +28,13 @@ namespace Кабельный_журнал
         public Form1()
         {
             InitializeComponent();
+            ((TextBox)toolStripTextBox2.Control).UseSystemPasswordChar = true;
             InitializeContextMenuStrip();
             eList = new EList(tabPage1);
             toolStripTextBox1.Text = Properties.Settings.Default.Login;
             toolStripTextBox2.Text = Properties.Settings.Default.Password;
+            tabPage3.Dispose();
+            tabPage4.Dispose();
 
 
 
@@ -250,6 +253,11 @@ namespace Кабельный_журнал
         {
             Properties.Settings.Default.Password = toolStripTextBox2.Text;
             Properties.Settings.Default.Save();
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

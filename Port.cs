@@ -9,7 +9,7 @@ namespace Кабельный_журнал
     public partial class Port : Panel
     {
         public ComboBox _duplex;
-        public ComboBox _mdia_type;
+        public ComboBox _media_type;
         public Label label1;
         public Label label15;
         public Label label2;
@@ -45,7 +45,7 @@ namespace Кабельный_журнал
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this._duplex = new System.Windows.Forms.ComboBox();
-            this._mdia_type = new System.Windows.Forms.ComboBox();
+            this._media_type = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -91,18 +91,18 @@ namespace Кабельный_журнал
             // 
             // comboBox3
             // 
-            this._mdia_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._mdia_type.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this._mdia_type.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this._mdia_type.FormattingEnabled = true;
-            this._mdia_type.Items.AddRange(new object[] {
+            this._media_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._media_type.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this._media_type.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this._media_type.FormattingEnabled = true;
+            this._media_type.Items.AddRange(new object[] {
             "auto-select",
             "sfp",
             "rj45"});
-            this._mdia_type.Location = new System.Drawing.Point(478, 67);
-            this._mdia_type.Name = "comboBox3";
-            this._mdia_type.Size = new System.Drawing.Size(103, 26);
-            this._mdia_type.TabIndex = 22;
+            this._media_type.Location = new System.Drawing.Point(478, 67);
+            this._media_type.Name = "comboBox3";
+            this._media_type.Size = new System.Drawing.Size(103, 26);
+            this._media_type.TabIndex = 22;
             // 
             // label1
             // 
@@ -189,6 +189,7 @@ namespace Кабельный_журнал
             this._description.Name = "_description";
             this._description.Size = new System.Drawing.Size(200, 19);
             this._description.TabIndex = 8;
+            this._description.TextChanged += _description_TextChanged;
             // 
             // label13
             // 
@@ -399,7 +400,7 @@ namespace Кабельный_журнал
             this.BackColor = System.Drawing.Color.White;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.Controls.Add(this._duplex);
-            this.Controls.Add(this._mdia_type);
+            this.Controls.Add(this._media_type);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.label2);
@@ -452,11 +453,35 @@ namespace Кабельный_журнал
                 _vlan_allowed.Hide();
                 label16.Text = "Vlan";
             }
+            _access.Enabled = false;
+            _duplex.Enabled = false;
+            _speed.Enabled = false;
+            _media_type.Enabled = false;
+            _vlan_native.Enabled = false;
+        }
+
+        private void _description_TextChanged(object sender, EventArgs e)
+        {
+            if (((List<string>)((TextBox)sender).Parent.Tag).Contains("description " + ((TextBox)sender).Text))
+            {
+            }
+            else
+            {
+                ((Cmd)((TextBox)sender).Parent.Parent.Parent.Parent.Tag)._description_TextChanged(((TextBox)sender).Text);
+            }
+                
         }
 
         private void _port_sequrity_CheckedChanged(object sender, EventArgs e)
         {
-            ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sw_po(((ToggleSwitch)sender).Checked);
+            if (((List<string>)((ToggleSwitch)sender).Parent.Tag).Contains("switchport port-security") == _port_sequrity.Checked)
+            {
+            }
+            else
+            {
+                ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sw_po(((ToggleSwitch)sender).Checked);
+            }
+                
         }
 
         private void _mac_DoubleClick(object sender, EventArgs e)
@@ -473,8 +498,14 @@ namespace Кабельный_журнал
 
         public void _enable_CheckedChanged(object sender, EventArgs e)
         {
-            ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sh(((ToggleSwitch)sender).Checked);
-            //Update();
+            if (((List<string>)((ToggleSwitch)sender).Parent.Tag).Contains("shutdoun") != _enable.Checked)
+            {
+            }
+            else
+            {
+                ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sh(((ToggleSwitch)sender).Checked);
+                Update();
+            }
         }
 
         private void _vlan_native_KeyUp(object sender, KeyEventArgs e)
@@ -487,8 +518,14 @@ namespace Кабельный_журнал
 
         internal void _mac_sticky_CheckedChanged(object sender, EventArgs e)
         {
-            ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sw_po_mac_st(((ToggleSwitch)sender).Checked);
-            Update();
+            if (((List<string>)((ToggleSwitch)sender).Parent.Tag).Contains("switchport port-security mac-address sticky") == _mac_sticky.Checked)
+            {
+            }
+            else
+            {
+                ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sw_po_mac_st(((ToggleSwitch)sender).Checked);
+                Update();
+            }
         }
 
         public void _vlan_native_SelectedValueChanged(object sender, EventArgs e)
@@ -503,36 +540,33 @@ namespace Кабельный_журнал
 
         private void _vlan_allowed_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
-            Cmd cmd = (Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag;
-            try
+            Cmd cmd = (Cmd)((DataGridView)sender).Parent.Parent.Parent.Parent.Tag;
+            if (((DataGridView)sender).SelectedCells.Count > 0)
             {
-                if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue == "")
+                try
                 {
-                    if ((string)((DataGridView)sender).SelectedCells[0].FormattedValue != "")
+                    if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue == "")
                     {
-                        var qqq = (string)((DataGridView)sender).SelectedCells[0].FormattedValue;
-                        ///ААААААА, это ужасно!!!!!!
-                        Task.Run(new Action(() =>
+                        if ((string)((DataGridView)sender).SelectedCells[0].FormattedValue != "")
                         {
-                            Invoke(new Action(() =>
+                            var qqq = (string)((DataGridView)sender).SelectedCells[0].FormattedValue;
+                            ///ААААААА, это ужасно!!!!!!
+                            Task.Run(new Action(() => Invoke(new Action(() =>
                             {
                                 cmd.re_vlan(qqq);
                                 ((DataGridView)sender).Rows.RemoveAt(e.RowIndex);
-                            }));
-                        }));
+                            }))));
+                        }
                     }
-                }
-                if ((string)((DataGridView)sender).SelectedCells[0].FormattedValue == "")
-                {
-                    if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue != "")
+                    if ((string)((DataGridView)sender).SelectedCells[0].FormattedValue == "")
                     {
-                        cmd.add_vlan((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue);
+                        if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue != "")
+                        {
+                            cmd.add_vlan((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue);
 
+                        }
                     }
-                }
-            } catch (Exception)
-            {
-
+                } catch (Exception){ }
             }
         }
 
@@ -726,7 +760,7 @@ namespace Кабельный_журнал
                 }
                 Invoke(new Action(() =>
                 {
-
+                    this.Tag = Tag;
                     this._description.Text = @interface.description;
                     this._access.Checked = @interface.sw_mode == "trunk";
                     if (this._access.Checked)
@@ -772,11 +806,8 @@ namespace Кабельный_журнал
                         this._mac.Items.Add(listViewItem);
                     }
                     this._duplex.Text = @interface.duplex;
-                    this._mdia_type.Text = @interface.media_type;
+                    this._media_type.Text = @interface.media_type;
                     this._speed.Text = @interface.speed;
-
-                    this.Tag = Tag;
-                    
                 }));
             }));
         }
