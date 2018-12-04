@@ -130,14 +130,6 @@ namespace Кабельный_журнал
         {
             myeList = myList;
             this.index = index;
-            //myeList.Insert(index < 0 ? 0 : index, this);
-            /*try
-            {
-                Control trY = myeList.First(q => q.Parent != null);
-                myeList.FindAll(q => { q.Show(); return null == (q.Parent = trY.Parent); });
-            }
-            catch (Exception)
-            {  }*/
             InitializeComponent();
             if (PORT_id>0)
             {
@@ -187,23 +179,19 @@ namespace Кабельный_журнал
                     foreach (DataSet1.PortRow item in portCollection)
                     {
                         portids.Add(item.ID, item.Порт);
-                        //Invoke(new Action(() =>
+                        Invoke(new Action(() =>
                         {
-                            Invoke(new Action(() =>
-                            {
-                                Equipment_Ports.Items.Add(item.Порт);
+                            Equipment_Ports.Items.Add(item.Порт);
                             Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].SubItems.Add(portNameTable.First(q => q.Порт == item.Порт).Expr5);
-                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = item.Включен ? Color.LightGreen : Color.LightPink;
-                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].Tag = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor;
-                                if (PORT_id == item.ID)
-                                {
-                                    //Equipment_Ports.FocusedItem = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1];
-                                    Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = Color.LightSkyBlue;
-                                    //myeList.ClickPort(Equipment_Ports);
-                                }
-                            }));
-                            
-                        }//));
+                            Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = item.Включен ? Color.LightGreen : Color.LightPink;
+                            Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].Tag = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor;
+                            if (PORT_id == item.ID)
+                            {
+                                //Equipment_Ports.FocusedItem = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1];
+                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = Color.LightSkyBlue;
+                                //myeList.ClickPort(Equipment_Ports);
+                            }
+                        }));
                     }
                     //Equipment_Ports.Items.AddRange(portids.Values.ToArray());
                     Invoke(new Action(() =>
@@ -230,7 +218,7 @@ namespace Кабельный_журнал
             //e.Link.Name = @"-telnet ipatov@" + ((Equipment)((LinkLabel)sender).Parent).Equipment_IP.Text;
             Task.Run(new Action(() =>
             {
-                Cmd dude = new Cmd(((Equipment)((LinkLabel)sender).Parent).Equipment_IP.Text, "ipatov", "RbhbkkBgfnjd", ((LinkLabel)sender).Text);
+                Cmd dude = new Cmd(((Equipment)((LinkLabel)sender).Parent).Equipment_IP.Text, Properties.Settings.Default.Login, Properties.Settings.Default.Password, ((LinkLabel)sender).Text);
 
                 if (dude.switch_name is null)
                 {
@@ -240,40 +228,27 @@ namespace Кабельный_журнал
                 TabControl tabControl = (TabControl)((TabPage)((Equipment)((LinkLabel)sender).Parent).Parent).Parent;
                 var ports = dude.GetPorts();
                 TabControl tabControl1 = new TabControl();
-                Invoke(new Action(() =>
-                {
-                    tabControl.TabPages.Add(tabPageConsole);
-                    tabControl.SelectedTab = tabPageConsole;
-                    tabPageConsole.Controls.Add(tabControl1);
-                    tabPageConsole.Tag = dude;
-                    tabControl1.Dock = DockStyle.Fill;
-                    tabControl1.Alignment = TabAlignment.Left;
-                    tabControl1.SizeMode = TabSizeMode.Fixed;
-                    tabControl1.ItemSize = new Size(32, 50);
-                    tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
-                    tabControl1.DrawItem += TabControl1_DrawItem;
-                }));
+                tabControl1.Dock = DockStyle.Fill;
+                tabControl1.Alignment = TabAlignment.Left;
+                tabControl1.SizeMode = TabSizeMode.Fixed;
+                tabControl1.ItemSize = new Size(32, 50);
+                tabControl1.DrawMode = TabDrawMode.OwnerDrawFixed;
+                tabControl1.DrawItem += TabControl1_DrawItem;
+                tabPageConsole.Tag = dude;
+                tabPageConsole.Controls.Add(tabControl1);
                 foreach (var item in ports)
                 {
                     TabPage tabPage = new TabPage(item);
                     //var tag = dude.GetPortConfig(item);
                     tabPage.Enter += TabPage_Enter;
-                    tabControl1.Selected += TabControl1_Selected;
-                    Invoke(new Action(() =>
-                    {
-                        tabControl1.TabPages.Add(tabPage);
-                        //tabPage.Tag = tag;
-                    }));
-
+                    tabControl1.TabPages.Add(tabPage);
                 }
-                Invoke(new Action(() => tabControl1.Select()));
+                Invoke(new Action(() => {
+                    tabControl.TabPages.Add(tabPageConsole);
+                    tabControl.SelectedTab = tabPageConsole;
+                    tabControl1.Select();
+                }));
             }));
-        }
-
-        private void TabControl1_Selected(object sender, TabControlEventArgs e)
-        {
-            //Cmd dude = ((TabPage)((TabControl)((TabPage)sender).Parent).Parent).Tag as Cmd;
-            //dude.in_(((TabPage)sender).Text);
         }
         
         private void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
@@ -312,13 +287,9 @@ namespace Кабельный_журнал
 
         private void TabPage_Enter(object sender, EventArgs e)
         {
-            List<string> Tag = new List<string>();
-            Cmd dude = ((TabPage)((TabControl)((TabPage)sender).Parent).Parent).Tag as Cmd;
-            Tag = dude.GetPortConfig(((TabPage)sender).Text);
-            dude.in_(((TabPage)sender).Text);
-            //dude.Close();
             
-            Interface @interface = new Interface();
+            Cmd dude = ((TabPage)((TabControl)((TabPage)sender).Parent).Parent).Tag as Cmd;
+            //dude.Close();
             Port port;
             if (((TabPage)sender).Controls.Count == 0)
             {
@@ -329,216 +300,11 @@ namespace Кабельный_журнал
             {
                 port = ((TabPage)sender).Controls[0] as Port;
             }
-            Task.Run(new Action(() =>
-            {
-                string description;
-                /// <summary>
-                /// acces: no mdix auto, no cdp enable, switchport port-security, switchport port-security mac-address sticky, mac
-                /// trunk: switchport nonegotiate, udld port
-                /// </summary>
-                string sw_mode = Tag.Find(q => q.Contains("switchport mode ")).Remove(0, "switchport mode ".Length);
-                int native_vlan;
-                int[] vlans;
-                bool sw_po;
-                bool sw_po_mac_st;
-                List<string> mac = new List<string>();
-                bool sh;
-                bool sp_bpduguard;
-                string media_type;
-                bool udld_port;
-                string duplex;
-                string speed;
-                try
-                {
-                    description = Tag.Find(q => q.Contains("description ")).Remove(0, "description ".Length);
-                }
-                catch (Exception)
-                {
-                    description = "";
-                }
-                try
-                {
-                    sw_po = Tag.Find(q => q.Trim() == "switchport port-security").Contains("switchport port-security");
-                }
-                catch (Exception)
-                {
-                    sw_po = false;
-                }
-                try
-                {
-                    sw_po_mac_st = Tag.Find(q => q.Trim() == "switchport port-security mac-address sticky").Contains("switchport port-security mac-address sticky");
-                }
-                catch (Exception)
-                {
-                    sw_po_mac_st = false;
-                }
-                try
-                {
-                    mac = Tag.FindAll(q => q.Contains(" mac-address "));
-                    for (int i = 0; i < mac.Count; i++)
-                    {
-                        mac[i] = mac[i].Remove(0, mac[i].IndexOf(" mac-address ") + " mac-address ".Length);
-                        mac[i] = mac[i].Remove(0, mac[i].IndexOf("sticky ") + "sticky ".Length);
-                    }
-                    mac.Remove("");
-                }
-                catch (Exception)
-                {
-                    mac = new List<string>();
-                }
-                try
-                {
-                    sp_bpduguard = Tag.Find(q => q.Contains(" bpduguard ")).Contains(" bpduguard ");
-                }
-                catch (Exception)
-                {
-                    sp_bpduguard = false;
-                }
-                try
-                {
-                    udld_port = Tag.Find(q => q.Contains("udld port")).Contains("udld port");
-                }
-                catch (Exception)
-                {
-                    udld_port = false;
-                }
-                try
-                {
-                    var ss = Tag.Find(q => q.Contains("duplex "));
-                    duplex = ss.Remove(0, ss.IndexOf("duplex ") + "duplex ".Length);
-                    duplex = duplex == "" ? "auto" : duplex;
-                }
-                catch (Exception)
-                {
-                    duplex = "auto";
-                }
-                try
-                {
-                    var ss = Tag.Find(q => q.Contains("media-type "));
-                    media_type = ss.Remove(0, ss.IndexOf("media-type ")+ "media-type ".Length);
-                }
-                catch (Exception)
-                {
-                    media_type = "auto-select";
-                }
-                try
-                {
-                    sh = true;
-                    sh = !Tag.Find(q => q.Contains("shutdown")).Contains("shutdown");
-                }
-                catch (Exception)
-                {
-                    sh = true;
-                }
-                try
-                {
-                    var ss = Tag.Find(q => q.Contains(" allowed vlan "));
-                    var vlanss = ss.Remove(0, ss.IndexOf(" allowed vlan ") + " allowed vlan ".Length).Split(',');
-                    vlans = new int[vlanss.Length];
-                    for (int i = 0; i < vlanss.Length; i++)
-                    {
-                        vlans[i] = Convert.ToInt32(vlanss[i]);
-                    }
-                }
-                catch (Exception)
-                {
-                    vlans = new int[0];
-                }
-                try
-                {
-                    var ss = Tag.Find(q => q.Contains(" native vlan ") || q.Contains(" access vlan "));
-                    native_vlan = Convert.ToInt32(ss.Remove(0, ss.IndexOf(" vlan ") + " vlan ".Length));
-                }
-                catch (Exception)
-                {
-                    native_vlan = 0;
-                }
-                try
-                {
-                    var ss = Tag.Find(q => q.Contains("speed "));
-                    speed = ss.Remove(0, ss.IndexOf("speed ") + "speed ".Length);
-                }
-                catch (Exception)
-                {
-                    speed = "auto";
-                }
-                @interface = new Interface() { speed = speed, port = Tag[0].Remove(0, "interface ".Length), description = description, duplex = duplex, mac = mac, media_type = media_type, native_vlan = native_vlan, sh = sh, sp_bpduguard = sp_bpduguard, sw_mode = sw_mode, sw_po = sw_po, sw_po_mac_st = sw_po_mac_st, udld_port = udld_port, vlans = vlans };
-                //streamWriter.WriteLine("sh ru in " + item);
-                Label label1 = new Label
-                {
-                    Text = "Enabled",
-                    Location = new Point(6, 12)
-                };
-                ToggleSwitch enabled = new ToggleSwitch
-                {
-                    Checked = @interface.sh,
-                    Location = new Point(label1.Right + 5, 6)
-                };
-                if (@interface.sw_mode == "access")
-                {
-
-                }
-                else if (@interface.sw_mode == "trunk")
-                {
-
-                }
-                Invoke(new Action(() =>
-                {
-                    
-                    port._description.Text = @interface.description;
-                    port._access.Checked = @interface.sw_mode == "trunk";
-                    if (port._access.Checked)
-                    {
-                        port.label5.Hide();
-                        port.label6.Hide();
-                        port.label12.Hide();
-                        port._port_sequrity.Hide();
-                        port._mac_sticky.Hide();
-                        port._mac.Hide();
-                        port.label17.Show();
-                        port._vlan_allowed.Show();
-                        port.label16.Text = "Native vlan";
-                    }
-                    else
-                    {
-                        port.label5.Show();
-                        port.label6.Show();
-                        port.label12.Show();
-                        port._port_sequrity.Show();
-                        port._mac_sticky.Show();
-                        port._mac.Show();
-                        port.label17.Hide();
-                        port._vlan_allowed.Hide();
-                        port.label16.Text = "Vlan";
-                    }
-                    port._access.CheckedChanged += port._access_CheckedChanged;
-                    port._enable.Checked = @interface.sh;
-                    port._enable.CheckedChanged += port._enable_CheckedChanged;
-                    port._vlan_native.Text = @interface.native_vlan.ToString();
-                    port._vlan_allowed.Rows.Clear();
-                    foreach (var item in @interface.vlans)
-                    {
-                        port._vlan_allowed.Rows.Add(new object[1] { item });
-                    }
-                    port._port_sequrity.Checked = @interface.sw_po;
-                    port._mac_sticky.Checked = @interface.sw_po_mac_st;
-                    port._mac.Items.Clear();
-                    foreach (var item in @interface.mac)
-                    {
-                        ListViewItem listViewItem = new ListViewItem(item.Split(' ')[0].Replace(".",""));
-                        listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, item.Remove(0, item.IndexOf(' ') == -1 ? item.Length : item.IndexOf(' ') + 1)));
-                        listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, "Удалить"));
-                        port._mac.Items.Add(listViewItem);
-                    }
-                    port._duplex.Text = @interface.duplex;
-                    port._mdia_type.Text = @interface.media_type;
-                    port._speed.Text = @interface.speed;
-
-                    port.Tag = Tag;
-                }));
-            }));
-
+            port.Update();
+            dude.int_(((TabPage)sender).Text);
         }
+
+        
 
         private void Dude_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {

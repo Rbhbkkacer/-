@@ -30,7 +30,8 @@ namespace Кабельный_журнал
             InitializeComponent();
             InitializeContextMenuStrip();
             eList = new EList(tabPage1);
-            
+            toolStripTextBox1.Text = Properties.Settings.Default.Login;
+            toolStripTextBox2.Text = Properties.Settings.Default.Password;
 
 
 
@@ -237,6 +238,18 @@ namespace Кабельный_журнал
             {
                 //((ComboBox)sender).Text;
             }
+        }
+
+        private void toolStripTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Login = toolStripTextBox1.Text;
+            Properties.Settings.Default.Save();
+        }
+
+        private void toolStripTextBox2_TextChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Password = toolStripTextBox2.Text;
+            Properties.Settings.Default.Save();
         }
     }
 }

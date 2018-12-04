@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -25,8 +27,8 @@ namespace Кабельный_журнал
         public ColumnHeader columnHeader2;
         public ColumnHeader columnHeader3;
         public Label label5;
-        public ToggleSwitch _port_sequrity;
         public ToggleSwitch _mac_sticky;
+        public ToggleSwitch _port_sequrity;
         public Label label17;
         public DataGridView _vlan_allowed;
         public DataGridViewTextBoxColumn Vlan;
@@ -62,8 +64,8 @@ namespace Кабельный_журнал
             this.label6 = new System.Windows.Forms.Label();
             this._enable = new Кабельный_журнал.ToggleSwitch();
             this._access = new Кабельный_журнал.ToggleSwitch();
-            this._port_sequrity = new Кабельный_журнал.ToggleSwitch();
             this._mac_sticky = new Кабельный_журнал.ToggleSwitch();
+            this._port_sequrity = new Кабельный_журнал.ToggleSwitch();
             this.label17 = new System.Windows.Forms.Label();
             this._vlan_allowed = new System.Windows.Forms.DataGridView();
             this.Vlan = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -227,6 +229,8 @@ namespace Кабельный_журнал
             this._mac.TabIndex = 15;
             this._mac.UseCompatibleStateImageBehavior = false;
             this._mac.View = System.Windows.Forms.View.Details;
+            this._mac.Click += _mac_Click;
+            this._mac.DoubleClick += _mac_DoubleClick;
             // 
             // columnHeader1
             // 
@@ -273,7 +277,7 @@ namespace Кабельный_журнал
             this._enable.TabIndex = 9;
             this._enable.Text = "toggleSwitch1";
             this._enable.UseVisualStyleBackColor = true;
-            //this._enable.CheckedChanged += _enable_CheckedChanged;
+            this._enable.CheckedChanged += this._enable_CheckedChanged;
             // 
             // _access
             // 
@@ -285,29 +289,31 @@ namespace Кабельный_журнал
             this._access.TabIndex = 10;
             this._access.Text = "toggleSwitch2";
             this._access.UseVisualStyleBackColor = true;
-            //this._access.CheckedChanged += new System.EventHandler(this._access_CheckedChanged);
-            // 
-            // _port_sequrity
-            // 
-            this._port_sequrity.AutoSize = true;
-            this._port_sequrity.Location = new System.Drawing.Point(100, 127);
-            this._port_sequrity.Name = "_port_sequrity";
-            this._port_sequrity.Padding = new System.Windows.Forms.Padding(5);
-            this._port_sequrity.Size = new System.Drawing.Size(103, 27);
-            this._port_sequrity.TabIndex = 14;
-            this._port_sequrity.Text = "toggleSwitch4";
-            this._port_sequrity.UseVisualStyleBackColor = true;
+            this._access.CheckedChanged += this._access_CheckedChanged;
             // 
             // _mac_sticky
             // 
             this._mac_sticky.AutoSize = true;
-            this._mac_sticky.Location = new System.Drawing.Point(100, 94);
-            this._mac_sticky.Name = "_mac_sticky";
+            this._mac_sticky.Location = new System.Drawing.Point(100, 127);
+            this._mac_sticky.Name = "_port_sequrity";
             this._mac_sticky.Padding = new System.Windows.Forms.Padding(5);
             this._mac_sticky.Size = new System.Drawing.Size(103, 27);
-            this._mac_sticky.TabIndex = 12;
-            this._mac_sticky.Text = "toggleSwitch3";
+            this._mac_sticky.TabIndex = 14;
+            this._mac_sticky.Text = "toggleSwitch4";
             this._mac_sticky.UseVisualStyleBackColor = true;
+            this._mac_sticky.CheckedChanged += this._mac_sticky_CheckedChanged;
+            // 
+            // _port_sequrity
+            // 
+            this._port_sequrity.AutoSize = true;
+            this._port_sequrity.Location = new System.Drawing.Point(100, 94);
+            this._port_sequrity.Name = "_mac_sticky";
+            this._port_sequrity.Padding = new System.Windows.Forms.Padding(5);
+            this._port_sequrity.Size = new System.Drawing.Size(103, 27);
+            this._port_sequrity.TabIndex = 12;
+            this._port_sequrity.Text = "toggleSwitch3";
+            this._port_sequrity.UseVisualStyleBackColor = true;
+            this._port_sequrity.CheckedChanged += this._port_sequrity_CheckedChanged;
             // 
             // label17
             // 
@@ -408,8 +414,8 @@ namespace Кабельный_журнал
             this.Controls.Add(this._access);
             this.Controls.Add(this._mac);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this._port_sequrity);
             this.Controls.Add(this._mac_sticky);
+            this.Controls.Add(this._port_sequrity);
             this.Controls.Add(this.label6);
             this.Controls.Add(this._vlan_native);
             this.Controls.Add(this._vlan_allowed);
@@ -427,8 +433,8 @@ namespace Кабельный_журнал
                 label5.Hide();
                 label6.Hide();
                 label12.Hide();
-                _port_sequrity.Hide();
                 _mac_sticky.Hide();
+                _port_sequrity.Hide();
                 _mac.Hide();
                 label17.Show();
                 _vlan_allowed.Show();
@@ -439,8 +445,8 @@ namespace Кабельный_журнал
                 label5.Show();
                 label6.Show();
                 label12.Show();
-                _port_sequrity.Show();
                 _mac_sticky.Show();
+                _port_sequrity.Show();
                 _mac.Show();
                 label17.Hide();
                 _vlan_allowed.Hide();
@@ -448,14 +454,27 @@ namespace Кабельный_журнал
             }
         }
 
+        private void _port_sequrity_CheckedChanged(object sender, EventArgs e)
+        {
+            ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sw_po(((ToggleSwitch)sender).Checked);
+        }
+
+        private void _mac_DoubleClick(object sender, EventArgs e)
+        {
+            ((Cmd)Parent.Parent.Parent.Tag)._mac_DoubleClick(sender, e);
+            Update();
+        }
+
         private void _vlan_allowed_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            ((Cmd)((TabPage)((TabControl)((TabPage)((Port)((DataGridView)sender).Parent).Parent).Parent).Parent).Tag).re_vlan(e.Row.Cells[0].Value.ToString());
+            ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).re_vlan(e.Row.Cells[0].Value.ToString());
+            //Update();
         }
 
         public void _enable_CheckedChanged(object sender, EventArgs e)
         {
-            ((Cmd)((TabPage)((Port)((ToggleSwitch)sender).Parent).Parent).Tag).sh(((ToggleSwitch)sender).Checked);
+            ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sh(((ToggleSwitch)sender).Checked);
+            //Update();
         }
 
         private void _vlan_native_KeyUp(object sender, KeyEventArgs e)
@@ -464,6 +483,12 @@ namespace Кабельный_журнал
             {
                 //((ComboBox)sender).Text;
             }
+        }
+
+        internal void _mac_sticky_CheckedChanged(object sender, EventArgs e)
+        {
+            ((Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag).sw_po_mac_st(((ToggleSwitch)sender).Checked);
+            Update();
         }
 
         public void _vlan_native_SelectedValueChanged(object sender, EventArgs e)
@@ -478,7 +503,7 @@ namespace Кабельный_журнал
 
         private void _vlan_allowed_RowLeave(object sender, DataGridViewCellEventArgs e)
         {
-            Cmd cmd = (Cmd)((TabPage)((TabControl)((TabPage)((Port)((DataGridView)sender).Parent).Parent).Parent).Parent).Tag;
+            Cmd cmd = (Cmd)((ToggleSwitch)sender).Parent.Parent.Parent.Parent.Tag;
             try
             {
                 if ((string)((DataGridView)sender).SelectedCells[0].EditedFormattedValue == "")
@@ -511,6 +536,16 @@ namespace Кабельный_журнал
             }
         }
 
+        internal void _mac_Click(object sender, EventArgs e)
+        {
+            if (((ListView)sender).SelectedItems.Count > 0)
+            {
+                Clipboard.Clear();
+                Clipboard.SetText(((ListView)sender).SelectedItems[0].Text);
+                //Update();
+            }
+        }
+
         public void _access_CheckedChanged(object sender, EventArgs e)
         {
             if (((ToggleSwitch)sender).Checked)
@@ -518,8 +553,8 @@ namespace Кабельный_журнал
                 label5.Hide();
                 label6.Hide();
                 label12.Hide();
-                _port_sequrity.Hide();
                 _mac_sticky.Hide();
+                _port_sequrity.Hide();
                 _mac.Hide();
                 label17.Show();
                 _vlan_allowed.Show();
@@ -530,13 +565,220 @@ namespace Кабельный_журнал
                 label5.Show();
                 label6.Show();
                 label12.Show();
-                _port_sequrity.Show();
                 _mac_sticky.Show();
+                _port_sequrity.Show();
                 _mac.Show();
                 label17.Hide();
                 _vlan_allowed.Hide();
                 label16.Text = "Vlan";
             }
+        }
+
+        internal new void Update()
+        {
+            List<string> Tag = new List<string>();
+            Tag = ((Cmd)Parent.Parent.Parent.Tag).GetPortConfig(((TabPage)Parent).Text);
+            Equipment.Interface @interface = new Equipment.Interface();
+            Task.Run(new Action(() =>
+            {
+                string description;
+                /// <summary>
+                /// acces: no mdix auto, no cdp enable, switchport port-security, switchport port-security mac-address sticky, mac
+                /// trunk: switchport nonegotiate, udld port
+                /// </summary>
+                string sw_mode = Tag.Find(q => q.Contains("switchport mode ")).Remove(0, "switchport mode ".Length);
+                int native_vlan;
+                int[] vlans;
+                bool sw_po;
+                bool sw_po_mac_st;
+                List<string> mac = new List<string>();
+                bool sh;
+                bool sp_bpduguard;
+                string media_type;
+                bool udld_port;
+                string duplex;
+                string speed;
+                try
+                {
+                    description = Tag.Find(q => q.Contains("description ")).Remove(0, "description ".Length);
+                } catch (Exception)
+                {
+                    description = "";
+                }
+                try
+                {
+                    sw_po = Tag.Contains("switchport port-security");
+                } catch (Exception)
+                {
+                    sw_po = false;
+                }
+                try
+                {
+                    sw_po_mac_st = Tag.Contains("switchport port-security mac-address sticky");
+                } catch (Exception)
+                {
+                    sw_po_mac_st = false;
+                }
+                try
+                {
+                    mac = Tag.FindAll(q => q.Contains(" mac-address "));
+                    for (int i = 0; i < mac.Count; i++)
+                    {
+                        mac[i] = mac[i].Remove(0, mac[i].IndexOf(" mac-address ") + " mac-address ".Length);
+                        if (mac[i].Contains("sticky "))
+                        {
+                            mac[i] = mac[i].Remove(0, mac[i].IndexOf("sticky ") + "sticky ".Length);
+                        }
+                    }
+                    mac.Remove("");
+                    mac.Remove("sticky");
+                } catch (Exception)
+                {
+                    mac = new List<string>();
+                }
+                try
+                {
+                    sp_bpduguard = Tag.Find(q => q.Contains(" bpduguard ")).Contains(" bpduguard ");
+                } catch (Exception)
+                {
+                    sp_bpduguard = false;
+                }
+                try
+                {
+                    udld_port = Tag.Find(q => q.Contains("udld port")).Contains("udld port");
+                } catch (Exception)
+                {
+                    udld_port = false;
+                }
+                try
+                {
+                    var ss = Tag.Find(q => q.Contains("duplex "));
+                    duplex = ss.Remove(0, ss.IndexOf("duplex ") + "duplex ".Length);
+                    duplex = duplex == "" ? "auto" : duplex;
+                } catch (Exception)
+                {
+                    duplex = "auto";
+                }
+                try
+                {
+                    var ss = Tag.Find(q => q.Contains("media-type "));
+                    media_type = ss.Remove(0, ss.IndexOf("media-type ") + "media-type ".Length);
+                } catch (Exception)
+                {
+                    media_type = "auto-select";
+                }
+                try
+                {
+                    sh = true;
+                    sh = !Tag.Find(q => q.Contains("shutdown")).Contains("shutdown");
+                } catch (Exception)
+                {
+                    sh = true;
+                }
+                try
+                {
+                    var ss = Tag.Find(q => q.Contains(" allowed vlan "));
+                    var vlanss = ss.Remove(0, ss.IndexOf(" allowed vlan ") + " allowed vlan ".Length).Split(',');
+                    vlans = new int[vlanss.Length];
+                    for (int i = 0; i < vlanss.Length; i++)
+                    {
+                        vlans[i] = Convert.ToInt32(vlanss[i]);
+                    }
+                } catch (Exception)
+                {
+                    vlans = new int[0];
+                }
+                try
+                {
+                    var ss = Tag.Find(q => q.Contains(" native vlan ") || q.Contains(" access vlan "));
+                    native_vlan = Convert.ToInt32(ss.Remove(0, ss.IndexOf(" vlan ") + " vlan ".Length));
+                } catch (Exception)
+                {
+                    native_vlan = 0;
+                }
+                try
+                {
+                    var ss = Tag.Find(q => q.Contains("speed "));
+                    speed = ss.Remove(0, ss.IndexOf("speed ") + "speed ".Length);
+                } catch (Exception)
+                {
+                    speed = "auto";
+                }
+                @interface = new Equipment.Interface() { speed = speed, port = Tag[0].Remove(0, "interface ".Length), description = description, duplex = duplex, mac = mac, media_type = media_type, native_vlan = native_vlan, sh = sh, sp_bpduguard = sp_bpduguard, sw_mode = sw_mode, sw_po = sw_po, sw_po_mac_st = sw_po_mac_st, udld_port = udld_port, vlans = vlans };
+                //streamWriter.WriteLine("sh ru in " + item);
+                Label label1 = new Label
+                {
+                    Text = "Enabled",
+                    Location = new Point(6, 12)
+                };
+                ToggleSwitch enabled = new ToggleSwitch
+                {
+                    Checked = @interface.sh,
+                    Location = new Point(label1.Right + 5, 6)
+                };
+                if (@interface.sw_mode == "access")
+                {
+
+                }
+                else if (@interface.sw_mode == "trunk")
+                {
+
+                }
+                Invoke(new Action(() =>
+                {
+
+                    this._description.Text = @interface.description;
+                    this._access.Checked = @interface.sw_mode == "trunk";
+                    if (this._access.Checked)
+                    {
+                        this.label5.Hide();
+                        this.label6.Hide();
+                        this.label12.Hide();
+                        this._mac_sticky.Hide();
+                        this._port_sequrity.Hide();
+                        this._mac.Hide();
+                        this.label17.Show();
+                        this._vlan_allowed.Show();
+                        this.label16.Text = "Native vlan";
+                    }
+                    else
+                    {
+                        this.label5.Show();
+                        this.label6.Show();
+                        this.label12.Show();
+                        this._mac_sticky.Show();
+                        this._port_sequrity.Show();
+                        this._mac.Show();
+                        this.label17.Hide();
+                        this._vlan_allowed.Hide();
+                        this.label16.Text = "Vlan";
+                    }
+                    this._enable.Checked = @interface.sh;
+                    this._vlan_native.Text = @interface.native_vlan.ToString();
+                    this._vlan_allowed.Rows.Clear();
+                    foreach (var item in @interface.vlans)
+                    {
+                        this._vlan_allowed.Rows.Add(new object[1] { item });
+                    }
+                    this._mac_sticky.Checked = @interface.sw_po_mac_st;
+                    this._port_sequrity.Checked = @interface.sw_po;
+                    this._mac.Items.Clear();
+                    foreach (var item in @interface.mac)
+                    {
+                        ListViewItem listViewItem = new ListViewItem(item.Split(' ')[0].Replace(".", "").ToUpper());
+                        listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, item.Remove(0, item.IndexOf(' ') == -1 ? item.Length : item.IndexOf(' ') + 1)));
+                        listViewItem.SubItems.Add(new ListViewItem.ListViewSubItem(listViewItem, "Удалить") { BackColor = Color.LightGray });
+
+                        this._mac.Items.Add(listViewItem);
+                    }
+                    this._duplex.Text = @interface.duplex;
+                    this._mdia_type.Text = @interface.media_type;
+                    this._speed.Text = @interface.speed;
+
+                    this.Tag = Tag;
+                    
+                }));
+            }));
         }
     }
 }

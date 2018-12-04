@@ -16,6 +16,7 @@ namespace Кабельный_журнал
         string password;
         public string switch_name = null;
         public System.Timers.Timer timer = new System.Timers.Timer();
+        string s;
 
         public Cmd(string ip, string login, string password, string protocol = "telnet")
         {
@@ -57,7 +58,7 @@ namespace Кабельный_журнал
             }
             this.Exited += Cmd_Exited;
             StandardInput.WriteLine("terminal length 0");
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
             if (s is null)
             {
                 Close();
@@ -80,7 +81,7 @@ namespace Кабельный_журнал
         private void Timer_Tick(object sender, EventArgs e)
         {
             StandardInput.WriteLine();
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
         }
         private void Cmd_Exited(object sender, EventArgs e)
         {
@@ -91,7 +92,7 @@ namespace Кабельный_журнал
         {
             List<string> vs = new List<string>();
             StandardInput.WriteLine("sh int statu");
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
             while (!(s.Contains("sh int statu")))
             {
                 s = StandardOutput.ReadLine();
@@ -118,7 +119,7 @@ namespace Кабельный_журнал
             StandardInput.WriteLine("end");
             List<string> vs = new List<string>();
             StandardInput.WriteLine("sh ru in " + port);
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
             while (!(s.Contains("sh ru in " + port)))
             {
                 s = StandardOutput.ReadLine();
@@ -141,43 +142,26 @@ namespace Кабельный_журнал
                 }
                 vs.Add(s.Trim());
             }
+            int_(port);
             return vs;
         }
 
         private void conf_t()
         {
-            StandardInput.WriteLine();
-            System.Threading.Thread.Sleep(200);
-            StreamReader streamReader = new StreamReader(StandardOutput.BaseStream);
-            String s = streamReader.ReadLine();
-            while (streamReader.charPos+s.Length!= streamReader.charLen)
-            {
-                s = streamReader.ReadLine();
-            }
-            if (s == switch_name + " (config-if)#")
-            {
-                StandardInput.WriteLine("ex");
-                s = StandardOutput.ReadLine();
-                return;
-            }
-            else if (s == switch_name + " (config)#")
-            {
-                StandardInput.WriteLine();
-                s = StandardOutput.ReadLine();
-                return;
-            }
+            StandardInput.WriteLine("end");
             StandardInput.WriteLine("conf t");
+            s = StandardOutput.ReadLine();
             while (s != switch_name + "(config)#")
             {
                 s = StandardOutput.ReadLine();
             }
             //"(config"
         }
-        public void in_(string port)
+        public void int_(string port)
         {
             conf_t();
             StandardInput.WriteLine("in " + port);
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
             while (s!= switch_name + "(config-if)#")
             {
                 s = StandardOutput.ReadLine();
@@ -187,7 +171,7 @@ namespace Кабельный_журнал
         public void sh(bool no)
         {
             StandardInput.WriteLine(no ? "no sh" : "sh");
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
             while (!(s.Contains("sh")))
             {
                 s = StandardOutput.ReadLine();
@@ -203,7 +187,7 @@ namespace Кабельный_журнал
         public void re_vlan(string formattedValue)
         {
             StandardInput.WriteLine("switchport trunk allowed vlan remove " + formattedValue);
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
             while (!(s.Contains("switchport trunk allowed vlan remove " + formattedValue)))
             {
                 s = StandardOutput.ReadLine();
@@ -213,8 +197,42 @@ namespace Кабельный_журнал
         internal void add_vlan(string editedFormattedValue)
         {
             StandardInput.WriteLine("switchport trunk allowed vlan add " + editedFormattedValue);
-            var s = StandardOutput.ReadLine();
+            s = StandardOutput.ReadLine();
             while (!(s.Contains("switchport trunk allowed vlan add " + editedFormattedValue)))
+            {
+                s = StandardOutput.ReadLine();
+            }
+        }
+
+        internal void _mac_DoubleClick(object sender, EventArgs e)
+        {
+            if (((ListView)sender).SelectedItems.Count > 0)
+            {
+                ListView listView = (ListView)sender;
+                ListViewItem listViewItem = listView.SelectedItems[0];
+                string s = listViewItem.Text.Insert(4, ".").Insert(9, ".") + " " + listViewItem.SubItems[1].Text;
+                s = s.Trim().ToLower();
+                List<string> ss = (List<string>)((Port)((ListView)sender).Parent).Tag;
+                StandardInput.WriteLine("no " + ss.Find(q => q.Contains(s)));
+                listView.SelectedItems[0].Remove();
+            }
+        }
+
+        internal void sw_po_mac_st(bool @checked)
+        {
+            StandardInput.WriteLine(@checked ? "sw po mac st" : "no sw po mac st");
+            s = StandardOutput.ReadLine();
+            while (!(s.Contains("sw po mac st")))
+            {
+                s = StandardOutput.ReadLine();
+            }
+        }
+
+        internal void sw_po(bool @checked)
+        {
+            StandardInput.WriteLine(@checked ? "sw po" : "no sw po");
+            s = StandardOutput.ReadLine();
+            while (!(s.Contains("sw po")))
             {
                 s = StandardOutput.ReadLine();
             }

@@ -10,5 +10,11 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source=glzSQL1.mssql.somee.com;Initial Catalog=glzSQL1;Persist Security Info=False;User ID=adSQLmin;Password=1qaz2wsx3edc4rfv;Packet Size=4096;Workstation ID=glzSQL1.mssql.somee.com</Value>
     </Setting>
+    <Setting Name="Login" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Password" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
