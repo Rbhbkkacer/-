@@ -125,12 +125,45 @@ namespace Кабельный_журнал
         public int roomid;
         public int equipmentid;
         public int index;
+        protected bool READONLY;
 
-        public Equipment(EList myList, int index, int PORT_id = 0, int ROOM_id = 0, int equipmentID = 0)
+        public Equipment(EList myList, int index = 0, int PORT_id = 0, int ROOM_id = 0, int equipmentID = 0, bool READONLY = true)
         {
             myeList = myList;
             this.index = index;
+            this.READONLY = READONLY;
             InitializeComponent();
+            //BackColor = Color.Transparent;
+            
+            if (READONLY)
+            {
+
+                Equipment_EO.ReadOnly = true;
+                Equipment_EO.BorderStyle = BorderStyle.None;
+                Equipment_EO.BackColor = Color.White;
+                Equipment_EO.Top += 4;
+                Equipment_IP.ReadOnly = true;
+                Equipment_IP.BorderStyle = BorderStyle.None;
+                Equipment_IP.BackColor = Color.White;
+                Equipment_IP.Top += 4;
+                Equipment_MAC.ReadOnly = true;
+                Equipment_MAC.BorderStyle = BorderStyle.None;
+                Equipment_MAC.BackColor = Color.White;
+                Equipment_MAC.Top += 4;
+                Equipment_Name.ReadOnly = true;
+                Equipment_Name.BorderStyle = BorderStyle.None;
+                Equipment_Name.BackColor = Color.White;
+                Equipment_Name.Top += 4;
+                House.ReadOnly = true;
+                House.BorderStyle = BorderStyle.None;
+                House.BackColor = Color.White;
+                House.Top += 4;
+                Room.ReadOnly = true;
+                Room.BorderStyle = BorderStyle.None;
+                Room.BackColor = Color.White;
+                Room.Top += 4;
+
+            }
             if (PORT_id>0)
             {
                 DataSet1TableAdapters.PortTableAdapter portTableAdapter = new DataSet1TableAdapters.PortTableAdapter();
@@ -158,11 +191,18 @@ namespace Кабельный_журнал
                     DataSet1TableAdapters.HomeTableAdapter homeTableAdapter = new DataSet1TableAdapters.HomeTableAdapter();
                     var homeTable = homeTableAdapter.GetData();
                     var homeRow = homeTable.FindByID(roomRow.ID_Корпуса);
-                    Invoke(new Action(() =>
+                    _1:
+                    try
                     {
-                        Room.Text = roomRow.Шкаф_кабинет;
-                        House.Text = homeRow.___корпуса;
-                    }));
+                        Invoke(new Action(() =>
+                        {
+                            Room.Text = roomRow.Шкаф_кабинет;
+                            House.Text = homeRow.___корпуса;
+                        }));
+                    } catch
+                    {
+                        return;
+                    }
                 });
             }
 
@@ -178,37 +218,49 @@ namespace Кабельный_журнал
                     var portNameTable = portNameTableAdapter.GetData(equipmentid);
                     foreach (DataSet1.PortRow item in portCollection)
                     {
-                        portids.Add(item.ID, item.Порт);
-                        Invoke(new Action(() =>
+                        try
                         {
-                            Equipment_Ports.Items.Add(item.Порт);
-                            Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].SubItems.Add(portNameTable.First(q => q.Порт == item.Порт).Expr5);
-                            Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = item.Включен ? Color.LightGreen : Color.LightPink;
-                            Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].Tag = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor;
-                            if (PORT_id == item.ID)
+                            portids.Add(item.ID, item.Порт);
+                            Invoke(new Action(() =>
                             {
-                                //Equipment_Ports.FocusedItem = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1];
-                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = Color.LightSkyBlue;
-                                //myeList.ClickPort(Equipment_Ports);
-                            }
-                        }));
+                                Equipment_Ports.Items.Add(item.Порт);
+                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].SubItems.Add(portNameTable.First(q => q.Порт == item.Порт).Expr5);
+                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = item.Включен ? Color.LightGreen : Color.LightPink;
+                                Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].Tag = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor;
+                                if (PORT_id == item.ID)
+                                {
+                                    //Equipment_Ports.FocusedItem = Equipment_Ports.Items[Equipment_Ports.Items.Count - 1];
+                                    Equipment_Ports.Items[Equipment_Ports.Items.Count - 1].BackColor = Color.LightSkyBlue;
+                                    //myeList.ClickPort(Equipment_Ports);
+                                }
+                            }));
+                        } catch (Exception)
+                        {
+                        }
                     }
                     //Equipment_Ports.Items.AddRange(portids.Values.ToArray());
-                    Invoke(new Action(() =>
+                    _1:
+                    try
                     {
-                        if (equipmentRow.IP != "")
+                        Invoke(new Action(() =>
                         {
-                            Controls.Add(linkLabel1);
-                            linkLabel1.LinkClicked += LinkLabel1_LinkClicked;
-                            Controls.Add(linkLabel2);
-                            linkLabel2.LinkClicked += LinkLabel1_LinkClicked;
-                        }
+                            if (equipmentRow.IP != "")
+                            {
+                                Controls.Add(linkLabel1);
+                                linkLabel1.LinkClicked += LinkLabel1_LinkClicked;
+                                Controls.Add(linkLabel2);
+                                linkLabel2.LinkClicked += LinkLabel1_LinkClicked;
+                            }
                         //Equipment_Ports.Sorted = true;
                         Equipment_Name.Text = Text = equipmentRow.Оборудование;
-                        Equipment_EO.Text = equipmentRow.EO == 0 ? "" : equipmentRow.EO.ToString();
-                        Equipment_MAC.Text = equipmentRow.Mac;
-                        Equipment_IP.Text = equipmentRow.IP;
-                    }));
+                            Equipment_EO.Text = equipmentRow.EO == 0 ? "" : equipmentRow.EO.ToString();
+                            Equipment_MAC.Text = equipmentRow.Mac;
+                            Equipment_IP.Text = equipmentRow.IP;
+                        }));
+                    } catch
+                    {
+                        return;
+                    }
                 });
             }
         }
@@ -725,7 +777,16 @@ namespace Кабельный_журнал
                 equipment.Visible = true;
                 equipment.ContextMenuStrip = Form1.contextMenuStrip1;
                 equipment.Equipment_Ports.SelectedIndexChanged += Equipment_Ports_SelectedIndexChanged;
-                parent.Controls.Add(equipment);
+                _1:
+                try
+                {
+                    parent.Controls.Add(equipment);
+                } catch (Exception)
+                {
+                    Thread.Sleep(100);
+                    goto _1;
+                }
+                
                 if (equipment.Equipment_Ports.SelectedIndices.Count > 0)
                 {
                     DataSet2ReadOnly.mainRow nmainRow = null;

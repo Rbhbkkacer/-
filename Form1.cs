@@ -12,13 +12,6 @@ namespace Кабельный_журнал
 {
     public partial class Form1 : Form
     {
-
-
-
-
-
-
-
         public static ContextMenuStrip contextMenuStrip1;
         private ToolStripMenuItem изменитьToolStripMenuItem;
         private ToolStripMenuItem удалитьToolStripMenuItem;
@@ -258,6 +251,33 @@ namespace Кабельный_журнал
         private void выходToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void корпусToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NewHome newHome = new NewHome();
+            newHome.ShowDialog();
+            if (newHome.Home != "" && !(newHome.Home is null))
+            {
+                DataSet1TableAdapters.HomeTableAdapter homeTableAdapter = new DataSet1TableAdapters.HomeTableAdapter();
+                homeTableAdapter.Insert(newHome.Home);
+            }
+        }
+
+        private void шкафКабинетToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NewRoom newRoom = new NewRoom();
+            newRoom.ShowDialog();
+            if (newRoom.Room != "" && !(newRoom.Room is null))
+            {
+                DataSet1TableAdapters.RoomTableAdapter roomTableAdapter = new DataSet1TableAdapters.RoomTableAdapter();
+                roomTableAdapter.Insert(newRoom.id_Home, newRoom.Room);
+            }
         }
     }
 }

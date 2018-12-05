@@ -28,14 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "000000-000000",
             "vlan access",
             "Удалить"}, -1);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.создатьToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.оборудованиеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.шкафКабинетToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.корпусToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.выходToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +64,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.port1 = new Кабельный_журнал.Port();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.label17 = new System.Windows.Forms.Label();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
@@ -79,18 +83,17 @@
             this.textBox7 = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
+            this.toggleSwitch1 = new Кабельный_журнал.ToggleSwitch();
+            this.toggleSwitch2 = new Кабельный_журнал.ToggleSwitch();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.dataSet1 = new Кабельный_журнал.DataSet1();
-            this.port1 = new Кабельный_журнал.Port();
-            this.toggleSwitch1 = new Кабельный_журнал.ToggleSwitch();
-            this.toggleSwitch2 = new Кабельный_журнал.ToggleSwitch();
             this.toggleSwitch4 = new Кабельный_журнал.ToggleSwitch();
             this.toggleSwitch3 = new Кабельный_журнал.ToggleSwitch();
+            this.dataSet1 = new Кабельный_журнал.DataSet1();
             this.menuStrip1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -125,14 +128,38 @@
             // 
             // создатьToolStripMenuItem
             // 
+            this.создатьToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.оборудованиеToolStripMenuItem,
+            this.шкафКабинетToolStripMenuItem,
+            this.корпусToolStripMenuItem});
             this.создатьToolStripMenuItem.Name = "создатьToolStripMenuItem";
-            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.создатьToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.создатьToolStripMenuItem.Text = "Создать";
+            // 
+            // оборудованиеToolStripMenuItem
+            // 
+            this.оборудованиеToolStripMenuItem.Name = "оборудованиеToolStripMenuItem";
+            this.оборудованиеToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.оборудованиеToolStripMenuItem.Text = "Оборудование";
+            // 
+            // шкафКабинетToolStripMenuItem
+            // 
+            this.шкафКабинетToolStripMenuItem.Name = "шкафКабинетToolStripMenuItem";
+            this.шкафКабинетToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.шкафКабинетToolStripMenuItem.Text = "Шкаф / Кабинет";
+            this.шкафКабинетToolStripMenuItem.Click += new System.EventHandler(this.шкафКабинетToolStripMenuItem_Click);
+            // 
+            // корпусToolStripMenuItem
+            // 
+            this.корпусToolStripMenuItem.Name = "корпусToolStripMenuItem";
+            this.корпусToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.корпусToolStripMenuItem.Text = "Корпус";
+            this.корпусToolStripMenuItem.Click += new System.EventHandler(this.корпусToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(114, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // выходToolStripMenuItem
             // 
@@ -307,6 +334,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.BackColor = System.Drawing.Color.White;
             this.tabPage1.Controls.Add(this.textBox1);
             this.tabPage1.Controls.Add(this.button1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
@@ -315,7 +343,6 @@
             this.tabPage1.Size = new System.Drawing.Size(859, 400);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Подключения";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // textBox1
             // 
@@ -359,6 +386,16 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "tabPage4";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // port1
+            // 
+            this.port1.BackColor = System.Drawing.Color.White;
+            this.port1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.port1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.port1.Location = new System.Drawing.Point(3, 3);
+            this.port1.Name = "port1";
+            this.port1.Size = new System.Drawing.Size(853, 394);
+            this.port1.TabIndex = 4;
             // 
             // tabPage3
             // 
@@ -414,16 +451,16 @@
             this.dataGridView2.ColumnHeadersVisible = false;
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Vlan});
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.Format = "N0";
-            dataGridViewCellStyle4.NullValue = null;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.Format = "N0";
+            dataGridViewCellStyle1.NullValue = null;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView2.DefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView2.EnableHeadersVisualStyles = false;
             this.dataGridView2.Location = new System.Drawing.Point(103, 97);
             this.dataGridView2.MultiSelect = false;
@@ -614,6 +651,29 @@
             this.label12.TabIndex = 35;
             this.label12.Text = "MAC address";
             // 
+            // toggleSwitch1
+            // 
+            this.toggleSwitch1.AutoSize = true;
+            this.toggleSwitch1.Location = new System.Drawing.Point(103, 33);
+            this.toggleSwitch1.Name = "toggleSwitch1";
+            this.toggleSwitch1.Padding = new System.Windows.Forms.Padding(5);
+            this.toggleSwitch1.Size = new System.Drawing.Size(103, 27);
+            this.toggleSwitch1.TabIndex = 28;
+            this.toggleSwitch1.Text = "toggleSwitch1";
+            this.toggleSwitch1.UseVisualStyleBackColor = true;
+            // 
+            // toggleSwitch2
+            // 
+            this.toggleSwitch2.AutoSize = true;
+            this.toggleSwitch2.Location = new System.Drawing.Point(103, 64);
+            this.toggleSwitch2.Name = "toggleSwitch2";
+            this.toggleSwitch2.Padding = new System.Windows.Forms.Padding(5);
+            this.toggleSwitch2.Size = new System.Drawing.Size(103, 27);
+            this.toggleSwitch2.TabIndex = 29;
+            this.toggleSwitch2.Text = "toggleSwitch2";
+            this.toggleSwitch2.UseVisualStyleBackColor = true;
+            this.toggleSwitch2.CheckedChanged += new System.EventHandler(this.toggleSwitch2_CheckedChanged);
+            // 
             // listView1
             // 
             this.listView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -623,9 +683,9 @@
             this.columnHeader3});
             this.listView1.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            listViewItem4.StateImageIndex = 0;
+            listViewItem1.StateImageIndex = 0;
             this.listView1.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem4});
+            listViewItem1});
             this.listView1.LabelEdit = true;
             this.listView1.Location = new System.Drawing.Point(103, 165);
             this.listView1.MultiSelect = false;
@@ -670,44 +730,6 @@
             this.label6.TabIndex = 32;
             this.label6.Text = "MAC sticky";
             // 
-            // dataSet1
-            // 
-            this.dataSet1.DataSetName = "DataSet1";
-            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // port1
-            // 
-            this.port1.BackColor = System.Drawing.Color.White;
-            this.port1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.port1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.port1.Location = new System.Drawing.Point(3, 3);
-            this.port1.Name = "port1";
-            this.port1.Size = new System.Drawing.Size(853, 394);
-            this.port1.TabIndex = 4;
-            // 
-            // toggleSwitch1
-            // 
-            this.toggleSwitch1.AutoSize = true;
-            this.toggleSwitch1.Location = new System.Drawing.Point(103, 33);
-            this.toggleSwitch1.Name = "toggleSwitch1";
-            this.toggleSwitch1.Padding = new System.Windows.Forms.Padding(5);
-            this.toggleSwitch1.Size = new System.Drawing.Size(103, 27);
-            this.toggleSwitch1.TabIndex = 28;
-            this.toggleSwitch1.Text = "toggleSwitch1";
-            this.toggleSwitch1.UseVisualStyleBackColor = true;
-            // 
-            // toggleSwitch2
-            // 
-            this.toggleSwitch2.AutoSize = true;
-            this.toggleSwitch2.Location = new System.Drawing.Point(103, 64);
-            this.toggleSwitch2.Name = "toggleSwitch2";
-            this.toggleSwitch2.Padding = new System.Windows.Forms.Padding(5);
-            this.toggleSwitch2.Size = new System.Drawing.Size(103, 27);
-            this.toggleSwitch2.TabIndex = 29;
-            this.toggleSwitch2.Text = "toggleSwitch2";
-            this.toggleSwitch2.UseVisualStyleBackColor = true;
-            this.toggleSwitch2.CheckedChanged += new System.EventHandler(this.toggleSwitch2_CheckedChanged);
-            // 
             // toggleSwitch4
             // 
             this.toggleSwitch4.AutoSize = true;
@@ -729,6 +751,11 @@
             this.toggleSwitch3.TabIndex = 31;
             this.toggleSwitch3.Text = "toggleSwitch3";
             this.toggleSwitch3.UseVisualStyleBackColor = true;
+            // 
+            // dataSet1
+            // 
+            this.dataSet1.DataSetName = "DataSet1";
+            this.dataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
             // 
             // Form1
             // 
@@ -825,6 +852,9 @@
         private System.Windows.Forms.ToolStripTextBox toolStripTextBox2;
         protected System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem оборудованиеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem шкафКабинетToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem корпусToolStripMenuItem;
     }
 }
 
